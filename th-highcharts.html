@@ -20,13 +20,16 @@ A Thelma component that wraps the Highcharts library
   <template>
     <core-style ref="theme"></core-style>
     <link rel="stylesheet" href="th-highcharts.css">
-
     <div id="chart" class="th-container">
       
     </div>
   </template>
+  
+  <!-- Include Highcharts library-->
   <script src="../highcharts/adapters/standalone-framework.js"></script>
-<script src="../highcharts/highcharts.js"></script>
+  <script src="../highcharts/highcharts.js"></script>
+  
+  
   <script>
     Polymer('th-highcharts', {
       chartData: [[    
