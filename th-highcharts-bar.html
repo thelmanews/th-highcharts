@@ -1,0 +1,236 @@
+<link rel="import" href="../polymer/polymer.html"> 
+<link rel="import" href="th-highcharts.html"> 
+
+<!--
+A Thelma component for displaying output
+
+##### Example
+
+    <th-highcharts-bar></th-highcharts-bar>
+
+@element th-highcharts-bar
+@blurb A component that sets WSJ default settings for the Highcharts bar chart
+@status alpha
+@author Thelma team
+@homepage http://thelmanews.github.io/th-highcharts-bar
+-->
+
+<polymer-element name="th-highcharts-bar"  attributes="chartData chartTitle chartSubtitle">
+  
+  <template>
+    <th-highcharts chartType="bar" chartData="{{chartData}}" chartOptions="{{_defaultOptions}}" chartTitle="{{chartTitle}}" chartSubtitle="{{chartSubtitle}}"></th-highcharts>
+  </template>
+  
+  <!-- Include Highcharts library-->
+  <script src="../highcharts/adapters/standalone-framework.js"></script>
+  <script src="../highcharts/highcharts.js"></script>
+  
+  <script>
+    Polymer('th-highcharts-bar', {
+      chartData: [[    
+                ["The Wall Street Journal", 2293798],
+                ["USA Today", 1713833],
+                ["New York Times", 1613865],
+                ["Los Angeles Times", 606075],    
+                ["New York Daily News", 530440]
+              ],
+              [  ["The Wall Street Journal", 2503798],
+                ["USA Today", 1413833],    
+                ["New York Times", 1913865],    
+                ["Los Angeles Times", 716075],    
+                ["New York Daily News", 580440
+              ]
+      ]],
+      chartTitle: '',
+      chartSubtitle: '',
+      _defaultOptions: {
+          colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
+          chart: {
+            type: 'bar',
+            height: 400, // CHANGE DEFAULT AND OVERRIDE WITH COMPUTED HEIGHT
+            marginBottom: 60,
+            style: {
+              maxWidth: '1275px', 
+              color: '#000000',
+              fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 'normal',
+              fontStyle: 'normal',
+              fontSize: 13 // HOW WILL THIS SCALE FOR DESKTOP VS MOBILE
+            },
+            events: {
+                load: function(e){
+                  // TODO: FIX THIS SO IT DOESN'T THROW ERROR
+
+                  // make the tick that has the 0 value black
+                  // var chart = e.target;
+
+                  // var index = chart.yAxis[0].tickPositions.indexOf(0);
+                  // index = (index === 0) ? chart.yAxis[0].tickPositions.length - 1: index;
+                
+                
+                // $chart.find('.highcharts-axis:eq(1) path:eq('+ index +')').attr('stroke', '#000');
+              }
+            },
+        },
+        legend: { // HOW TO MOVE LEGEND TO THE BOTTOM
+          floating: false,
+          title: {
+              style: {
+                  fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontSize: '12px',
+                  fontWeight: 800
+              }
+          },
+          itemStyle: {
+              fontSize: 12,
+              fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+              fontStyle: 'normal',
+              color: '#231F20'
+          }
+        },
+        tooltip: {
+          enabled: true,
+          borderWidth: 1,
+          borderRadius: 0,
+          borderColor: '#ccc',
+          useHTML: true,
+          shared: true,
+           formatter: function(){
+              var html = '<div class="tooltip tooltip-table tooltip-narrow">';
+                html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
+                html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
+              var points = this.points; // TODO: CHECK 'THIS' REFERENCES
+
+                var value = this.y;
+                  var num_decimals      = points[0].series.chart.options.yAxisDecimal || null;
+                  var num_decimals_base = 0;
+
+                      value             = Highcharts.numberFormat(value, num_decimals, '.', '');
+
+                  if(points[0].series.chart.options.yAxisUnitPlace1 == 'prefix'){
+                    value = points[0].series.chart.options.yAxisUnit1 + value;
+                  }
+                  if(points[0].series.chart.options.yAxisUnitPlace2 == 'suffix'){
+                    value = value + points[0].series.chart.options.yAxisUnit2;
+                  }
+
+                // TODO: FIX THIS SO IT DOESN'T THROW ERROR
+                // $.each(points, function(i, point){
+                //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+                //   html += '<td>' + value + '</td></tr>';
+                // });
+
+                html += '</table></div>';
+
+              return html;
+            },
+        },
+        plotOptions: {
+            series: {
+              events: {
+                legendItemClick: function () {
+                    var this_isVisible = this.visible;
+                    // var chart   = $chart.highcharts();
+                    var series  = this.chart.series;
+                    var visible = [];
+                    console.log(this);
+                    // $.each(series, function(i, item){
+                    //   if(item.visible === false){
+                    //     visible.push(item.visible);
+                    //   }
+                    // });
+
+                    if(visible.length + 1 === series.length){
+                      if(!this_isVisible){
+                        return;
+                      }
+                      return false;
+                    }
+                  }
+                }
+            },
+            bar: {
+              allowPointSelect: true,
+              stacking: false, // $scope.builder.chart.stacked,
+              dataLabels: {
+                softConnector: false,
+              }
+            }
+        },
+        xAxis: {
+          minTickInterval: 1,
+          lineColor: '#999999',
+          tickLength: 8,
+          tickColor: '#A8A7A5',
+          tickWidth: 1,
+          tickmarkPlacement: 'on',
+          startOnTick: false,
+          labels: {
+              style: {
+                  color: '#000000',
+                  fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontWeight: 'normal',
+                  fontStyle: 'normal',
+                  fontSize: 13
+              }
+          },
+          title: {
+              style: {
+                  fontSize: '13px',
+                  fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+              }
+          },
+          type: 'category',
+          categories: []
+        },
+        yAxis: {
+              // offset: -10,
+              labels: {
+                allowDecimals: false,
+                align: 'right',
+                // y: -4,
+                // x: 30,
+                style: {
+                    color: '#000000',
+                    fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    fontWeight: 'normal',
+                    fontStyle: 'normal',
+                    // paddingRight: 25,
+                    fontSize: 13
+                },
+                formatter: function () {
+
+                  // TODO: CHECK 'THIS' REFERENCES
+                  var num_decimals      = this.chart.options.yAxisDecimal || null;
+                  var num_decimals_base = 0;
+                  var value             = this.value;
+                      value             = Highcharts.numberFormat(value, num_decimals, '.', '');
+
+
+                      if(this.chart.options.yAxisUnitPlace1 == 'prefix'){
+                        value = (this.isLast) ? this.chart.options.yAxisUnit1 + value : '<span style="opacity: 0">'+ this.chart.options.yAxisUnit1 +'</span>' + value;
+                      }
+                      if(this.chart.options.yAxisUnitPlace2 == 'suffix'){
+                        value = (this.isLast) ? value + this.chart.options.yAxisUnit2 : value + '<span style="opacity: 0">'+ this.chart.options.yAxisUnit2 +'</span>';
+                      }
+
+                      value = (this.isFirst) ? Highcharts.numberFormat(value, num_decimals_base, '.', '') : value;
+
+                     return value;
+                  },
+              },
+              reversed: false,
+              gridLineColor: '#A8A7A5',
+              tickColor: '#A8A7A5',
+              tickWidth: 1,
+              tickPosition: 'inside',
+              position: {
+                  align: 'left',
+                  x: 10
+              }
+        }
+      }
+    });
+  </script>
+</polymer-element>

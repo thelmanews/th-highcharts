@@ -1,0 +1,160 @@
+<link rel="import" href="../polymer/polymer.html"> 
+<link rel="import" href="../th-theme/th-theme.html"> 
+<link rel="import" href="../th-d3-chart/th-d3-chart.html"> 
+
+
+<!--
+A Thelma component that wraps the Highcharts library
+##### Example
+
+    <th-highcharts></th-highcharts>
+
+@element th-highcharts
+@blurb A Thelma component that wraps the Highcharts library
+@status alpha
+@author Thelma team
+@homepage http://thelmanews.github.io/th-highcharts
+-->
+
+<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions">
+  <template>
+    <core-style ref="theme"></core-style>
+    <link rel="stylesheet" href="th-highcharts.css">
+    <style>
+      :host {
+        display: inline-block;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      #chart {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <div id="chart" class="th-container">
+      
+    </div>
+  </template>
+  <script src="../highcharts/adapters/standalone-framework.js"></script>
+<script src="../highcharts/highcharts.js"></script>
+  <script>
+    Polymer('th-highcharts', {
+      chartData: [[    
+                ["The Wall Street Journal", 2293798],
+                ["USA Today", 1713833],
+                ["New York Times", 1613865],
+                ["Los Angeles Times", 606075],    
+                ["New York Daily News", 530440]
+              ],
+              [  ["The Wall Street Journal", 2503798],
+                ["USA Today", 1413833],    
+                ["New York Times", 1913865],    
+                ["Los Angeles Times", 716075],    
+                ["New York Daily News", 580440
+              ]
+      ]],
+      chartType: 'bar',
+      chartOptions: {
+        // TODO: set basic default options
+      }, 
+      ready: function () {
+        this._overrideDefaults();
+        this._buildChart();
+        var chart = new Highcharts.Chart(this.chartOptions);
+        
+        
+        // var chart = new Highcharts.Chart({
+        //       chart: {
+        //         renderTo: this.$.chart,
+        //         type: this.chartType
+        //       },
+        //       title: {
+        //           text: 'Fruit Consumption'
+        //       },
+        //       xAxis: {
+        //           categories: ['Apples', 'Bananas', 'Oranges']
+        //       },
+        //       yAxis: {
+        //           title: {
+        //               text: 'Fruit eaten'
+        //           }
+        //       },
+        //       series: [{
+        //           name: 'Jane',
+        //           data: [1, 0, 4]
+        //       }, {
+        //           name: 'John',
+        //           data: [5, 7, 3]
+        //       }]
+        //   });
+
+      
+      },
+      _overrideDefaults: function(){
+        // Select container for chart
+        this.chartOptions.chart.renderTo = this.$.chart;
+
+        // Parse data and convert to Highcharts compatible format
+        this.chartOptions.series = this._parseData(this.chartData);
+
+        // TODO: Set dimensions of chart based on component dimensions
+
+        // Set and align title and subtitle
+        this.chartOptions.title = {
+          align: 'left',
+          text: this.chartTitle
+        }
+
+        this.chartOptions.subtitle = {
+          align: 'left',
+          text: this.chartSubtitle
+        }
+
+      },
+      _parseData: function(data){
+        var chartData = [];
+
+        // If data structure is array
+        if (Array.isArray(data)){
+          data.forEach(function(series){
+            // If each item in array is array
+            if (Array.isArray(series)){
+              // TODO: account for scenario when first item in array represents series names
+              var seriesObj = {
+                data: series
+              };
+              chartData.push(seriesObj);
+            
+            // If each item in array is an object
+            } else if (typeof(series) === 'object'){
+
+
+            }
+
+          })
+        }
+
+        return chartData;
+      },
+      _buildChart: function(){
+        this.chartOptions.chart.renderTo = this.$.chart;
+        this.chartOptions.series = this._parseData(this.chartData);
+      },
+      animate: function(){
+       
+      },
+      reset: function(){
+       
+      },
+      
+      resize: function(){
+       
+      }
+
+    });
+  </script>
+</polymer-element>
