@@ -2,7 +2,6 @@
 <link rel="import" href="../th-theme/th-theme.html"> 
 <link rel="import" href="../th-d3-chart/th-d3-chart.html"> 
 
-
 <!--
 A Thelma component that wraps the Highcharts library
 ##### Example
@@ -16,20 +15,18 @@ A Thelma component that wraps the Highcharts library
 @homepage http://thelmanews.github.io/th-highcharts
 -->
 
-<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions">
+<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval">
+  
   <template>
     <core-style ref="theme"></core-style>
     <link rel="stylesheet" href="th-highcharts.css">
-    <div id="chart" class="th-container">
-      
-    </div>
+    <div id="chart" class="th-container"></div>
   </template>
   
   <!-- Include Highcharts library-->
   <script src="../highcharts/adapters/standalone-framework.js"></script>
   <script src="../highcharts/highcharts.js"></script>
-  
-  
+
   <script>
     Polymer('th-highcharts', {
       chartData: [[    
@@ -50,12 +47,19 @@ A Thelma component that wraps the Highcharts library
       chartOptions: {
         // TODO: set basic default options
       }, 
+      sourceURL: 'http://www.wsj.com/',
+      source: 'The Wall Street Journal',
+      series1Name: 'Series 1',
+      series2Name: 'Series 2',
+      series3Name: 'Series 3',
+      yAxisTitle: '',
+      xAxisTitle: '',
       ready: function () {
         this._overrideDefaults();
         this._buildChart();
         var chart = new Highcharts.Chart(this.chartOptions);
         
-        
+        console.log(chart);
         // var chart = new Highcharts.Chart({
         //       chart: {
         //         renderTo: this.$.chart,
@@ -96,12 +100,31 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.title = {
           align: 'left',
           text: this.chartTitle
-        }
-
+        };
         this.chartOptions.subtitle = {
           align: 'left',
           text: this.chartSubtitle
-        }
+        };
+
+        // Override default yAxis title (Values)
+        this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
+        this.chartOptions.yAxis.title.text = this.yAxisTitle || '';
+
+        // Override default credits (highcharts.com)
+        this.chartOptions.credits = {
+          href: this.sourceURL,
+          text: this.source,
+          position: {
+            align: 'left',
+            x: 10
+          }
+        };
+
+        // Override ability to click on bar, which changes color to gray
+        this.chartOptions.plotOptions.bar.allowPointSelect = false;
+
+        // Override original padding, which sets the legend too close to the chart
+        this.chartOptions.legend.padding = 0;
 
       },
       _parseData: function(data){
@@ -120,7 +143,7 @@ A Thelma component that wraps the Highcharts library
             
             // If each item in array is an object
             } else if (typeof(series) === 'object'){
-
+              // TODO: convert to array format with series names
 
             }
 

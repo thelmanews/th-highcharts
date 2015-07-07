@@ -55,15 +55,12 @@ A Thelma component for displaying output
             },
             events: {
                 load: function(e){
-                  // TODO: FIX THIS SO IT DOESN'T THROW ERROR
-
                   // make the tick that has the 0 value black
-                  // var chart = e.target;
-
-                  // var index = chart.yAxis[0].tickPositions.indexOf(0);
-                  // index = (index === 0) ? chart.yAxis[0].tickPositions.length - 1: index;
+                  var chart = e.target;
+                  var index = chart.yAxis[0].tickPositions.indexOf(0);
+                  index = (index === 0) ? chart.yAxis[0].tickPositions.length - 1: index;
                 
-                
+                // TODO: FIX THIS SO IT DOESN'T THROW ERROR
                 // $chart.find('.highcharts-axis:eq(1) path:eq('+ index +')').attr('stroke', '#000');
               }
             },
@@ -102,7 +99,7 @@ A Thelma component for displaying output
                   var num_decimals      = points[0].series.chart.options.yAxisDecimal || null;
                   var num_decimals_base = 0;
 
-                      value             = Highcharts.numberFormat(value, num_decimals, '.', '');
+                      value =             Highcharts.numberFormat(value, num_decimals, '.', '');
 
                   if(points[0].series.chart.options.yAxisUnitPlace1 == 'prefix'){
                     value = points[0].series.chart.options.yAxisUnit1 + value;
@@ -111,11 +108,18 @@ A Thelma component for displaying output
                     value = value + points[0].series.chart.options.yAxisUnit2;
                   }
 
-                // TODO: FIX THIS SO IT DOESN'T THROW ERROR
+                // REPLACED WITH BELOW
                 // $.each(points, function(i, point){
                 //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
                 //   html += '<td>' + value + '</td></tr>';
                 // });
+
+                // REPLACED ABOVE WITH THIS
+                points.forEach(function(point, i){
+                  html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+                  html += '<td>' + value + '</td></tr>';
+                });
+
 
                 html += '</table></div>';
 
@@ -130,16 +134,24 @@ A Thelma component for displaying output
                     // var chart   = $chart.highcharts();
                     var series  = this.chart.series;
                     var visible = [];
-                    console.log(this);
+                    
+                    // REPLACED WITH BELOW
                     // $.each(series, function(i, item){
-                    //   if(item.visible === false){
+                    //  if(item.visible === false){
                     //     visible.push(item.visible);
-                    //   }
+                    //  }
                     // });
+                    
+                    // REPLACED ABOVE WITH THIS
+                    series.forEach(function(item, i){
+                      if(item.visible === false){
+                        visible.push(item.visible);
+                      }
+                    })
 
                     if(visible.length + 1 === series.length){
                       if(!this_isVisible){
-                        return;
+                        return; 
                       }
                       return false;
                     }
