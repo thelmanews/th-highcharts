@@ -54,12 +54,14 @@ A Thelma component that wraps the Highcharts library
       series3Name: 'Series 3',
       yAxisTitle: '',
       xAxisTitle: '',
+      thousandsSep: ',',
+      valueDecimals: 0,
+      valuePrefix: '$',
       ready: function () {
         this._overrideDefaults();
         this._buildChart();
         var chart = new Highcharts.Chart(this.chartOptions);
         
-        console.log(chart);
         // var chart = new Highcharts.Chart({
         //       chart: {
         //         renderTo: this.$.chart,
@@ -95,6 +97,8 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.series = this._parseData(this.chartData);
 
         // TODO: Set dimensions of chart based on component dimensions
+        this.chartOptions.chart.height = 500;
+        this.chartOptions.chart.width = 500;
 
         // Set and align title and subtitle
         this.chartOptions.title = {
@@ -125,6 +129,17 @@ A Thelma component that wraps the Highcharts library
 
         // Override original padding, which sets the legend too close to the chart
         this.chartOptions.legend.padding = 0;
+
+        // Override y-axis label rotation
+        this.chartOptions.yAxis.labels.autoRotation = -45;
+
+        // Set value formats with prefix, suffix, etc.
+        this.chartOptions.tooltip = this.chartOptions.tooltip || {};
+        this.chartOptions.tooltip.valuePrefix = this.valuePrefix;
+        this.chartOptions.tooltip.valueSuffix = this.valueSuffix;
+        this.chartOptions.tooltip.valueDecimals = this.valueDecimals;
+        this.chartOptions.tooltip.xDateFormat = this.xDateFormat;
+        
 
       },
       _parseData: function(data){
