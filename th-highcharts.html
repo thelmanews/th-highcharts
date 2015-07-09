@@ -15,7 +15,7 @@ A Thelma component that wraps the Highcharts library
 @homepage http://thelmanews.github.io/th-highcharts
 -->
 
-<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval">
+<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep">
   
   <template>
     <core-style ref="theme"></core-style>
@@ -56,7 +56,6 @@ A Thelma component that wraps the Highcharts library
       xAxisTitle: '',
       thousandsSep: ',',
       valueDecimals: 0,
-      valuePrefix: '$',
       ready: function () {
         this._overrideDefaults();
         this._buildChart();
@@ -97,8 +96,8 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.series = this._parseData(this.chartData);
 
         // TODO: Set dimensions of chart based on component dimensions
-        this.chartOptions.chart.height = 500;
-        this.chartOptions.chart.width = 500;
+        // this.chartOptions.chart.height = 500;
+        // this.chartOptions.chart.width = 500;
 
         // Set and align title and subtitle
         this.chartOptions.title = {
@@ -139,7 +138,7 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.tooltip.valueSuffix = this.valueSuffix;
         this.chartOptions.tooltip.valueDecimals = this.valueDecimals;
         this.chartOptions.tooltip.xDateFormat = this.xDateFormat;
-        
+        // TODO: prefix/suffix is not working
 
       },
       _parseData: function(data){
