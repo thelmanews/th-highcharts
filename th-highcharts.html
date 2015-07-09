@@ -111,7 +111,11 @@ A Thelma component that wraps the Highcharts library
 
         // Override default yAxis title (Values)
         this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
-        this.chartOptions.yAxis.title.text = this.yAxisTitle || '';
+        this.chartOptions.yAxis.title.text = this.yAxisTitle || '';  
+
+        // Override default yAxis title (Values)
+        this.chartOptions.xAxis.title = this.chartOptions.xAxis.title || {};
+        this.chartOptions.xAxis.title.text = this.xAxisTitle || '';  
 
         // Override default credits (highcharts.com)
         this.chartOptions.credits = {
@@ -142,30 +146,67 @@ A Thelma component that wraps the Highcharts library
 
       },
       _parseData: function(data){
+        var self = this;
         var chartData = [];
 
         // If data structure is array
         if (Array.isArray(data)){
-          data.forEach(function(series){
+          data.forEach(function(row){
             // If each item in array is array
-            if (Array.isArray(series)){
+            if (Array.isArray(row)){
               // TODO: account for scenario when first item in array represents series names
               var seriesObj = {
-                data: series
+                data: row
               };
+              
               chartData.push(seriesObj);
             
             // If each item in array is an object
-            } else if (typeof(series) === 'object'){
-              // TODO: convert to array format with series names
-
+            } else if (typeof(row) === 'object'){
+              // This is specific to Thelma formatted data which has 'label', 'series1', 'series2', 'series3' properties
+              if (row.label && row.series1){
+                this.thelmaData = true;
+              } else {
+                // TODO: find a way to parse data in a normal / not-Thelma way and incorporate here
+              }
             }
-
           })
+          if (thelmaData){chartData = self._parseDataThelma(data); };
         }
 
         return chartData;
       },
+      /**
+       * '_parseDataThelma' expects data to be in the format of an array of objects, with 
+       */
+      _parseDataThelma: function(data){
+        var chartData = [];
+        
+        // Set x-axis labels
+        this.chartOptions.xAxis.categories = data.map(function(row){ return row.label; });
+
+        // Divide up series data 
+        for(var i=1; i<=3; i++){
+          // Skip if there is no data in a series
+          if (!data[0]['series'+i] || data[0]['series'+i] === 0){
+            continue;
+          }
+
+          // Otherwise, create Highcharts series object
+          var series = {};
+          series.name = this['series'+i+'Name'];
+          series.data = data.map(function(row){ 
+            var value = row['series'+i];
+            if (value || value === 0){
+              return parseFloat(value); // convert string values into numbers
+            }
+          });
+
+          chartData.push(series); // collect all series in chartData
+        }
+        return chartData;
+      },
+
       _buildChart: function(){
         this.chartOptions.chart.renderTo = this.$.chart;
         this.chartOptions.series = this._parseData(this.chartData);

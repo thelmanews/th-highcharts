@@ -15,30 +15,45 @@ A Thelma component for displaying output
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element name="th-highcharts-bar"  attributes="chartData chartTitle chartSubtitle">
+<polymer-element name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep">
   
   <template>
-    <th-highcharts chartType="bar" chartData="{{chartData}}" chartOptions="{{_defaultOptions}}" chartTitle="{{chartTitle}}" chartSubtitle="{{chartSubtitle}}"></th-highcharts>
+    <th-highcharts 
+      chartType="bar" 
+      chartData="{{chartData}}" 
+      chartOptions="{{_defaultOptions}}" 
+      chartTitle="{{chartTitle}}" 
+      chartSubtitle="{{chartSubtitle}}" 
+      series1Name="{{series1Name}}" 
+      series2Name="{{series2Name}}" 
+      series3Name="{{series3Name}}" 
+      xAxisTitle="{{xAxisTitle}}"
+      yAxisTitle="{{yAxisTitle}}"
+      thousandsSep="{{thousandsSep}}"
+      valueDecimals="{{valueDecimals}}"
+      valuePrefix="{{valuePrefix}}"
+      valueSuffix="{{valueSuffix}}">
+    </th-highcharts>
   </template>
   
   <script>
     Polymer('th-highcharts-bar', {
-      chartData: [[    
-                ["The Wall Street Journal", 2293798],
-                ["USA Today", 1713833],
-                ["New York Times", 1613865],
-                ["Los Angeles Times", 606075],    
-                ["New York Daily News", 530440]
-              ],
-              [  ["The Wall Street Journal", 2503798],
-                ["USA Today", 1413833],    
-                ["New York Times", 1913865],    
-                ["Los Angeles Times", 716075],    
-                ["New York Daily News", 580440
-              ]
-      ]],
+      chartData: [
+         {"label": "2012", "series1": "100000", "series2": "100000", "series3":"150" },
+            {"label": "2013", "series1": "50000", "series2": "1500000" },
+            {"label": "2014", "series1": "300000", "series2": "2000000" },
+            {"label": "2015", "series1": "200000", "series2": "110000" }
+      ],
+      series1Name: 'Germany',
+      series2Name: "France",
+      series3Name: "New York Times",
       chartTitle: '',
       chartSubtitle: '',
+      yAxisTitle: '',
+      xAxisTitle: '',
+      thousandsSep: ',',
+      valueDecimals: 0,
+
       _defaultOptions: {
           colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
           chart: {
