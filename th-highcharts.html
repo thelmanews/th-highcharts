@@ -15,7 +15,7 @@ A Thelma component that wraps the Highcharts library
 @homepage http://thelmanews.github.io/th-highcharts
 -->
 
-<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep">
+<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep chartWidth chartHeight">
   
   <template>
     <core-style ref="theme"></core-style>
@@ -56,11 +56,23 @@ A Thelma component that wraps the Highcharts library
       xAxisTitle: '',
       thousandsSep: ',',
       valueDecimals: 0,
+      observe: {
+        'chartWidth': 'resize',
+        'chartHeight': 'resize'
+      },
+      domReady: function(){
+        // console.log(this.computeWidth());
+        // console.log(this.computeHeight());
+        // this.chartOptions.chart.width = this.computeWidth();
+        // this.chartOptions.chart.height = this.computeHeight();
+      },
       ready: function () {
+        console.log(this.chartWidth);
         this._overrideDefaults();
+
         this._buildChart();
-        var chart = new Highcharts.Chart(this.chartOptions);
-        
+
+        this.chart = new Highcharts.Chart(this.chartOptions);
         // var chart = new Highcharts.Chart({
         //       chart: {
         //         renderTo: this.$.chart,
@@ -93,11 +105,22 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.chart.renderTo = this.$.chart;
 
         // Parse data and convert to Highcharts compatible format
-        this.chartOptions.series = this._parseData(this.chartData);
+        this.seriesData = this._parseData(this.chartData);
+        // this.seriesDataStart = this.seriesData.map(function(series){
+        //   var startingData = series.data.map(function(value){return 0;});
+        //   series.data = startingData;
+        //   return series;
+        // })
+        
+
+        
+        // this.chartOptions.series = this._parseData(this.chartData);
 
         // TODO: Set dimensions of chart based on component dimensions
         // this.chartOptions.chart.height = 500;
         // this.chartOptions.chart.width = 500;
+        this.chartOptions.chart.width = this.chartWidth;
+        this.chartOptions.chart.height = this.chartHeight;
 
         // Set and align title and subtitle
         this.chartOptions.title = {
@@ -194,6 +217,7 @@ A Thelma component that wraps the Highcharts library
 
           // Otherwise, create Highcharts series object
           var series = {};
+          series.style = {opacity: 0};
           series.name = this['series'+i+'Name'];
           series.data = data.map(function(row){ 
             var value = row['series'+i];
@@ -209,16 +233,32 @@ A Thelma component that wraps the Highcharts library
 
       _buildChart: function(){
         this.chartOptions.chart.renderTo = this.$.chart;
-        this.chartOptions.series = this._parseData(this.chartData);
+        this.chartOptions.series = this.seriesData;
       },
       animate: function(){
-       
+        // Reinstantiate the chart
+        this.chart = new Highcharts.Chart(this.chartOptions);
+
+        // TODO: delay animation until this is called instead of reinstantiating chart
+
       },
       reset: function(){
-       
+        var numSeries = this.seriesData.length;
+
+        // Remove each series
+        for (var i=0; i<numSeries; i++){
+          this.chart.series[0].remove(true);
+        }
+
       },
-      
       resize: function(){
+        // Reset dimensions in chartOptions
+        this.chartOptions.chart.width = this.chartWidth;
+        this.chartOptions.chart.height = this.chartHeight;
+        this.animate();
+        
+        // Resize chart with animation
+        // this.chart.setSize(this.chartWidth, this.chartHeight, doAnimation = true);
        
       }
 

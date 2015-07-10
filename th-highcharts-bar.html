@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html"> 
+<link rel="import" href="../th-d3-chart/th-d3-chart.html"> 
 <link rel="import" href="th-highcharts.html"> 
 
 <!--
@@ -15,10 +16,18 @@ A Thelma component for displaying output
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep">
+<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep">
   
   <template>
-    <th-highcharts 
+    <style>
+      :host {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+    </style>
+    <th-highcharts id="chart"
       chartType="bar" 
       chartData="{{chartData}}" 
       chartOptions="{{_defaultOptions}}" 
@@ -32,16 +41,19 @@ A Thelma component for displaying output
       thousandsSep="{{thousandsSep}}"
       valueDecimals="{{valueDecimals}}"
       valuePrefix="{{valuePrefix}}"
-      valueSuffix="{{valueSuffix}}">
+      valueSuffix="{{valueSuffix}}"
+      chartWidth="{{chartWidth}}"
+      chartHeight="{{chartHeight}}"
+      >
     </th-highcharts>
   </template>
   
   <script>
     Polymer('th-highcharts-bar', {
       chartData: [
-         {"label": "2012", "series1": "100000", "series2": "100000", "series3":"150" },
-            {"label": "2013", "series1": "50000", "series2": "1500000" },
-            {"label": "2014", "series1": "300000", "series2": "2000000" },
+         {"label": "2012", "series1": "100000", "series2": "100000", "series3":"150000" },
+            {"label": "2013", "series1": "50000", "series2": "150000" },
+            {"label": "2014", "series1": "300000", "series2": "200000" },
             {"label": "2015", "series1": "200000", "series2": "110000" }
       ],
       series1Name: 'Germany',
@@ -53,7 +65,17 @@ A Thelma component for displaying output
       xAxisTitle: '',
       thousandsSep: ',',
       valueDecimals: 0,
-
+      ready: function(){
+        // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
+        this.chartHeight = this.computeHeight();
+        this.chartWidth = this.computeWidth();
+      },
+      animate: function(){ 
+        this.$.chart.animate();
+      },
+      reset: function(){ 
+        this.$.chart.reset();
+      },
       _defaultOptions: {
           colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
           chart: {
@@ -254,6 +276,7 @@ A Thelma component for displaying output
               }
         }
       }
+      
     });
   </script>
 </polymer-element>
