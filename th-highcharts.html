@@ -15,7 +15,7 @@ A Thelma component that wraps the Highcharts library
 @homepage http://thelmanews.github.io/th-highcharts
 -->
 
-<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep chartWidth chartHeight">
+<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep chartWidth chartHeight legend">
   
   <template>
     <core-style ref="theme"></core-style>
@@ -55,6 +55,7 @@ A Thelma component that wraps the Highcharts library
       yAxisTitle: '',
       xAxisTitle: '',
       thousandsSep: ',',
+      legend: true,
       valueDecimals: 0,
       observe: {
         'chartWidth': 'resize',
@@ -135,10 +136,13 @@ A Thelma component that wraps the Highcharts library
         // Override default yAxis title (Values)
         this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
         this.chartOptions.yAxis.title.text = this.yAxisTitle || '';  
+        this.chartOptions.yAxis.title.margin = 5; // distance between axis labels and title
 
         // Override default yAxis title (Values)
         this.chartOptions.xAxis.title = this.chartOptions.xAxis.title || {};
         this.chartOptions.xAxis.title.text = this.xAxisTitle || '';  
+        this.chartOptions.xAxis.title.margin = 5; // distance between axis labels and title
+
 
         // Override default credits (highcharts.com)
         this.chartOptions.credits = {
@@ -154,7 +158,14 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.plotOptions.bar.allowPointSelect = false;
 
         // Override original padding, which sets the legend too close to the chart
-        this.chartOptions.legend.padding = 0;
+        if (this.legend){
+          this.chartOptions.chart.marginBottom = 80;
+        } else {
+          this.chartOptions.legend.enabled = false;
+        }
+        
+        
+        
 
         // Override y-axis label rotation
         this.chartOptions.yAxis.labels.autoRotation = -45;

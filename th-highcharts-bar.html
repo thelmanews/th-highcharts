@@ -16,7 +16,7 @@ A Thelma component for displaying output
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep">
+<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep legend">
   
   <template>
     <style>
@@ -42,6 +42,7 @@ A Thelma component for displaying output
       valueDecimals="{{valueDecimals}}"
       valuePrefix="{{valuePrefix}}"
       valueSuffix="{{valueSuffix}}"
+      legend="{{legend}}"
       chartWidth="{{chartWidth}}"
       chartHeight="{{chartHeight}}"
       >
@@ -61,10 +62,11 @@ A Thelma component for displaying output
       series3Name: "New York Times",
       chartTitle: '',
       chartSubtitle: '',
-      yAxisTitle: '',
+      yAxisTitle: 'alskdalkd',
       xAxisTitle: '',
       thousandsSep: ',',
       valueDecimals: 0,
+      legend: false,
       ready: function(){
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
