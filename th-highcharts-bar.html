@@ -16,7 +16,7 @@ A Thelma component for displaying output
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep legend">
+<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep legend seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
   
   <template>
     <style>
@@ -27,10 +27,13 @@ A Thelma component for displaying output
         position: relative;
       }
     </style>
+
     <th-highcharts id="chart"
       chartType="bar" 
       chartData="{{chartData}}" 
       chartOptions="{{_defaultOptions}}" 
+      chartWidth="{{chartWidth}}"
+      chartHeight="{{chartHeight}}"
       chartTitle="{{chartTitle}}" 
       chartSubtitle="{{chartSubtitle}}" 
       series1Name="{{series1Name}}" 
@@ -43,10 +46,15 @@ A Thelma component for displaying output
       valuePrefix="{{valuePrefix}}"
       valueSuffix="{{valueSuffix}}"
       legend="{{legend}}"
-      chartWidth="{{chartWidth}}"
-      chartHeight="{{chartHeight}}"
+      seriesColors="{{seriesColors}}"
+      textColor="{{textColor}}"
+      backgroundColor="{{backgroundColor}}"
+      gridLineColor="{{gridLineColor}}"
+      xTickInterval="{{xTickInterval}}"
+      yTickInterval="{{yTickInterval}}"
       >
     </th-highcharts>
+
   </template>
   
   <script>
@@ -60,13 +68,17 @@ A Thelma component for displaying output
       series1Name: 'Germany',
       series2Name: "France",
       series3Name: "New York Times",
-      chartTitle: '',
-      chartSubtitle: '',
+      chartTitle: 'title',
+      chartSubtitle: 'subtitle',
       yAxisTitle: 'alskdalkd',
-      xAxisTitle: '',
+      xAxisTitle: 'x axis title',
       thousandsSep: ',',
       valueDecimals: 0,
-      legend: false,
+      legend: true,
+      seriesColors: [],
+      textColor: '',
+      backgroundColor: '',
+      gridLineColor: '',
       ready: function(){
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
