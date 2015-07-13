@@ -61,15 +61,10 @@ A Thelma component that wraps the Highcharts library
       textColor: '',
       backgroundColor: '',
       gridLineColor: '',
+      valuePrefix: '$',
       observe: {
         'chartWidth': 'resize',
         'chartHeight': 'resize'
-      },
-      domReady: function(){
-        // console.log(this.computeWidth());
-        // console.log(this.computeHeight());
-        // this.chartOptions.chart.width = this.computeWidth();
-        // this.chartOptions.chart.height = this.computeHeight();
       },
       ready: function () {
         this._setupChart();
@@ -92,10 +87,9 @@ A Thelma component that wraps the Highcharts library
         this._overrideDefaultSettings();
         this._setupTitles();
         this._setupAxes();
-        this._formatTooltips();
+        this._formatValues();
         this._applyThemeColors();
         
-
       },
       _parseData: function(data){
         var self = this;
@@ -161,12 +155,9 @@ A Thelma component that wraps the Highcharts library
       },
 
       _setDimensions: function(){
-        // TODO: Set dimensions of chart based on component dimensions
-        // this.chartOptions.chart.height = 500;
-        // this.chartOptions.chart.width = 500;
+        // chartWidth and chartHeight are calculated in parent element due to faster load time
         this.chartOptions.chart.width = this.chartWidth;
         this.chartOptions.chart.height = this.chartHeight;
-
       },
       _overrideDefaultSettings: function(){
         // Override default yAxis title (Values)
@@ -222,8 +213,6 @@ A Thelma component that wraps the Highcharts library
         
       },
       _setupAxes: function(){
-
-
         this.chartOptions.xAxis.title = this.chartOptions.xAxis.title || {};
         this.chartOptions.xAxis.title.text = this.xAxisTitle || '';  
         
@@ -234,17 +223,13 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.xAxis.tickInterval = this.xTickInterval;
 
       },
-      _formatTooltips: function(){
-
-        // Set value formats with prefix, suffix, etc.
-        this.chartOptions.tooltip = this.chartOptions.tooltip || {};
-        this.chartOptions.tooltip.valuePrefix = this.valuePrefix;
-        this.chartOptions.tooltip.valueSuffix = this.valueSuffix;
-        this.chartOptions.tooltip.valueDecimals = this.valueDecimals;
-        this.chartOptions.tooltip.xDateFormat = this.xDateFormat;
-        // TODO: prefix/suffix is not working
-
-        
+      _formatValues: function(){
+        var self = this;
+        var prefix = self.valuePrefix || '';
+        var suffix = self.valueSuffix || '';
+        this.chartOptions.yAxis.labels.formatter = function(){
+          return prefix + Highcharts.numberFormat(this.value, self.valueDecimals, '.', self.thousandsSep) + suffix;
+        }
       },
       _applyThemeColors: function(){
         // TODO: refactor all of the below

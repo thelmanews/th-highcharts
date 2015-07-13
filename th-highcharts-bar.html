@@ -31,7 +31,7 @@ A Thelma component for displaying output
     <th-highcharts id="chart"
       chartType="bar" 
       chartData="{{chartData}}" 
-      chartOptions="{{_defaultOptions}}" 
+      chartOptions="{{chartOptions}}" 
       chartWidth="{{chartWidth}}"
       chartHeight="{{chartHeight}}"
       chartTitle="{{chartTitle}}" 
@@ -60,18 +60,18 @@ A Thelma component for displaying output
   <script>
     Polymer('th-highcharts-bar', {
       chartData: [
-         {"label": "2012", "series1": "100000", "series2": "100000", "series3":"150000" },
+         {"label": "2012", "series1": "100000", "series2": "100000" },
             {"label": "2013", "series1": "50000", "series2": "150000" },
             {"label": "2014", "series1": "300000", "series2": "200000" },
             {"label": "2015", "series1": "200000", "series2": "110000" }
       ],
       series1Name: 'Germany',
-      series2Name: "France",
-      series3Name: "New York Times",
-      chartTitle: 'title',
-      chartSubtitle: 'subtitle',
-      yAxisTitle: 'alskdalkd',
-      xAxisTitle: 'x axis title',
+      series2Name: 'France',
+      series3Name: '',
+      chartTitle: '',
+      chartSubtitle: '',
+      yAxisTitle: '',
+      xAxisTitle: '',
       thousandsSep: ',',
       valueDecimals: 0,
       legend: true,
@@ -83,6 +83,7 @@ A Thelma component for displaying output
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
         this.chartWidth = this.computeWidth();
+        this._formatTooltipValues();
       },
       animate: function(){ 
         this.$.chart.animate();
@@ -90,7 +91,58 @@ A Thelma component for displaying output
       reset: function(){ 
         this.$.chart.reset();
       },
-      _defaultOptions: {
+      resize: function(){
+        this.$.chart.resize();
+      },
+      _formatTooltipValues: function(){
+        // 1) Define reference to component
+        var self = this; 
+        
+        // 2) Copy/paste tooltip formatter function from chartOptions
+        this.chartOptions.tooltip.formatter = function(){
+          var html = '<div class="tooltip tooltip-table tooltip-narrow">';
+              html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
+              html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
+          var points = this.points; 
+
+          var value = this.y;
+          // 3) Redefine number of decimal places with component attribute
+          var num_decimals = self.valueDecimals|| null;
+          var num_decimals_base = 0;
+
+              // 4) Include thousandsSep attribute in format
+              value = Highcharts.numberFormat(value, num_decimals, '.', self.thousandsSep);
+
+              // 5) Include prefix in value foramt
+              if(self.valuePrefix){
+                value = self.valuePrefix + value;
+              }
+
+              // 6) Include suffix in value foramt
+              if(self.valueSuffix){
+                value = value + self.valueSuffix;
+              }
+
+            // REPLACED WITH BELOW
+            // $.each(points, function(i, point){
+            //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+            //   html += '<td>' + value + '</td></tr>';
+            // });
+
+            // REPLACED ABOVE WITH THIS
+            points.forEach(function(point, i){
+              html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+              html += '<td>' + value + '</td></tr>';
+            });
+
+
+            html += '</table></div>';
+
+          return html;
+        }
+
+      },
+      chartOptions: {
           colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
           chart: {
             type: 'bar',
@@ -145,7 +197,7 @@ A Thelma component for displaying output
                 html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
                 html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
               var points = this.points; // TODO: CHECK 'THIS' REFERENCES
-
+console.log(this);
                 var value = this.y;
                   var num_decimals      = points[0].series.chart.options.yAxisDecimal || null;
                   var num_decimals_base = 0;
