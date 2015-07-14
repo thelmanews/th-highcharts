@@ -15,7 +15,7 @@ A Thelma component that wraps the Highcharts library
 @homepage http://thelmanews.github.io/th-highcharts
 -->
 
-<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions source sourceURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep chartWidth chartHeight legend seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
+<polymer-element name="th-highcharts" extends="th-d3-chart"  attributes="chartType chartTitle chartSubtitle chartOptions credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep chartWidth chartHeight legend seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
   
   <template>
     <core-style ref="theme"></core-style>
@@ -47,8 +47,8 @@ A Thelma component that wraps the Highcharts library
       chartOptions: {
         // TODO: set basic default options
       }, 
-      sourceURL: 'http://www.wsj.com/',
-      source: 'The Wall Street Journal',
+      creditsURL: 'http://www.wsj.com/',
+      credits: 'The Wall Street Journal',
       series1Name: 'Series 1',
       series2Name: 'Series 2',
       series3Name: 'Series 3',
@@ -173,8 +173,8 @@ A Thelma component that wraps the Highcharts library
 
         // Override default credits (highcharts.com)
         this.chartOptions.credits = {
-          href: this.sourceURL,
-          text: this.source,
+          href: this.creditsURL,
+          text: this.credits,
           position: {
             align: 'left',
             x: 10
