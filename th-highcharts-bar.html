@@ -74,6 +74,7 @@ A Thelma component for displaying output
       valueDecimals: 0,
       legend: true,
       seriesColors: [],
+      valuePrefix: '$',
       ready: function(){
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
@@ -105,8 +106,17 @@ A Thelma component for displaying output
           var num_decimals = self.valueDecimals|| null;
           var num_decimals_base = 0;
 
+
+            // REPLACED WITH BELOW
+            // $.each(points, function(i, point){
+            //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+            //   html += '<td>' + value + '</td></tr>';
+            // });
+
+            // REPLACED ABOVE WITH THIS
+            points.forEach(function(point, i){
               // 4) Include thousandsSep attribute in format
-              value = Highcharts.numberFormat(value, num_decimals, '.', self.thousandsSep);
+              value = Highcharts.numberFormat(point.y, num_decimals, '.', self.thousandsSep);
 
               // 5) Include prefix in value foramt
               if(self.valuePrefix){
@@ -117,15 +127,6 @@ A Thelma component for displaying output
               if(self.valueSuffix){
                 value = value + self.valueSuffix;
               }
-
-            // REPLACED WITH BELOW
-            // $.each(points, function(i, point){
-            //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
-            //   html += '<td>' + value + '</td></tr>';
-            // });
-
-            // REPLACED ABOVE WITH THIS
-            points.forEach(function(point, i){
               html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
               html += '<td>' + value + '</td></tr>';
             });
@@ -192,12 +193,12 @@ A Thelma component for displaying output
                 html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
                 html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
               var points = this.points; // TODO: CHECK 'THIS' REFERENCES
-console.log(this);
+
                 var value = this.y;
                   var num_decimals      = points[0].series.chart.options.yAxisDecimal || null;
                   var num_decimals_base = 0;
 
-                      value =             Highcharts.numberFormat(value, num_decimals, '.', '');
+                      value =  Highcharts.numberFormat(value, num_decimals, '.', '');
 
                   if(points[0].series.chart.options.yAxisUnitPlace1 == 'prefix'){
                     value = points[0].series.chart.options.yAxisUnit1 + value;
