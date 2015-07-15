@@ -221,8 +221,8 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.yAxis.min = this.yAxisMin || null;
         this.chartOptions.yAxis.max = this.yAxisMax || null;
 
-        this.chartOptions.yAxis.tickInterval = this.yTickInterval;
-        this.chartOptions.xAxis.tickInterval = this.xTickInterval;
+        this.chartOptions.yAxis.tickInterval = this.yTickInterval ? parseFloat(this.yTickInterval) : this.yTickInterval;
+        this.chartOptions.xAxis.tickInterval = this.xTickInterval ? parseFloat(this.xTickInterval) : this.xTickInterval;
 
       },
       _formatValues: function(){
@@ -261,8 +261,8 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.xAxis.labels.style.color = fgColor;
 
         this.chartOptions.xAxis.gridLineColor = this.gridLineColor || fgColor;
-        this.chartOptions.xAxis.lineColor = fgColor;
-        this.chartOptions.xAxis.tickColor = fgColor;
+        this.chartOptions.xAxis.lineColor = this.gridLineColor || fgColor;
+        this.chartOptions.xAxis.tickColor = this.gridLineColor || fgColor;
         
         this.chartOptions.yAxis.title.style = this.chartOptions.yAxis.title.style || {};
         this.chartOptions.yAxis.title.style.color = fgColor;
