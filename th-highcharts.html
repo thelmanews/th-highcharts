@@ -63,6 +63,7 @@ A Thelma component that wraps the Highcharts library
       gridLineColor: '',
       valuePrefix: '$',
       observe: {
+        'legend': '_setupChart',
         'chartWidth': 'resize',
         'chartHeight': 'resize'
       },
