@@ -16,7 +16,7 @@ A Thelma component for displaying output
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep legend seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
+<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartType chartTitle chartSubtitle chartOptions credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legend legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
   
   <template>
     <style>
@@ -46,6 +46,7 @@ A Thelma component for displaying output
       valuePrefix="{{valuePrefix}}"
       valueSuffix="{{valueSuffix}}"
       legend="{{legend}}"
+      legendTitle="{{legendTitle}}"
       seriesColors="{{seriesColors}}"
       textColor="{{textColor}}"
       backgroundColor="{{backgroundColor}}"

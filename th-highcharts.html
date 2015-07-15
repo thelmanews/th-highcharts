@@ -179,11 +179,15 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.plotOptions.bar.allowPointSelect = false;
 
         // Override original padding, which sets the legend too close to the chart
+        console.log(this.chartOptions.chart.marginBottom);
         if (this.legend){
           this.chartOptions.legend.enabled = true;
           this.chartOptions.chart.marginBottom = 80;
+          this.chartOptions.legend.title = this.chartOptions.legend.title || {};
+          this.chartOptions.legend.title.text = this.legendTitle;
         } else {
           this.chartOptions.legend.enabled = false;
+          this.chartOptions.chart.marginBottom = 40;
         }
 
         // Remove the border on bars
