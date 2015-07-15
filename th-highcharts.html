@@ -44,26 +44,17 @@ A Thelma component that wraps the Highcharts library
               ]
       ]],
       chartType: 'bar',
-      chartOptions: {
-        // TODO: set basic default options
-      }, 
-      creditsURL: 'http://www.wsj.com/',
-      credits: 'The Wall Street Journal',
+      // chartOptions: {
+      //   // TODO: set basic default options
+      // }, 
       series1Name: 'Series 1',
       series2Name: 'Series 2',
       series3Name: 'Series 3',
-      yAxisTitle: '',
-      xAxisTitle: '',
-      thousandsSep: ',',
       legend: true,
       valueDecimals: 0,
       seriesColors: [],
-      textColor: '',
-      backgroundColor: '',
-      gridLineColor: '',
-      valuePrefix: '$',
       observe: {
-        'legend': '_setupChart',
+        'legend': 'redraw',
         'chartWidth': 'resize',
         'chartHeight': 'resize'
       },
@@ -73,6 +64,7 @@ A Thelma component that wraps the Highcharts library
         this.chart = new Highcharts.Chart(this.chartOptions);
       },
       _setupChart: function(){
+
         // Select container for chart
         this.chartOptions.chart.renderTo = this.$.chart;
 
@@ -187,6 +179,7 @@ A Thelma component that wraps the Highcharts library
 
         // Override original padding, which sets the legend too close to the chart
         if (this.legend){
+          this.chartOptions.legend.enabled = true;
           this.chartOptions.chart.marginBottom = 80;
         } else {
           this.chartOptions.legend.enabled = false;
@@ -258,9 +251,10 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.xAxis.title.style = this.chartOptions.xAxis.title.style || {};
         this.chartOptions.xAxis.title.style.color = fgColor;
         this.chartOptions.xAxis.labels.style.color = fgColor;
+
         this.chartOptions.xAxis.gridLineColor = this.gridLineColor || fgColor;
-        this.chartOptions.xAxis.lineColor = this.gridLineColor || fgColor;
-        this.chartOptions.xAxis.tickColor = this.gridLineColor || fgColor;
+        this.chartOptions.xAxis.lineColor = fgColor;
+        this.chartOptions.xAxis.tickColor = fgColor;
         
         this.chartOptions.yAxis.title.style = this.chartOptions.yAxis.title.style || {};
         this.chartOptions.yAxis.title.style.color = fgColor;
@@ -269,7 +263,7 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.yAxis.tickColor = this.gridLineColor || fgColor;
         
 
-        
+        // console.log(this.gridLineColor);
         this.chartOptions.title.style = this.chartOptions.title.style || {};
         this.chartOptions.subtitle.style = this.chartOptions.subtitle.style || {};
         this.chartOptions.title.style.color = this.chartOptions.subtitle.style.color = fgColor;
@@ -284,10 +278,14 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.chart.renderTo = this.$.chart;
         this.chartOptions.series = this.seriesData;
       },
+      redraw: function(){
+        this._setupChart();
+        this._buildChart();
+        this.animate();
+      },
       animate: function(){
         // Reinstantiate the chart
         this.chart = new Highcharts.Chart(this.chartOptions);
-
         // TODO: delay animation until this is called instead of reinstantiating chart
 
       },
