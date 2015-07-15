@@ -41,6 +41,8 @@ A Thelma component for displaying output
       series3Name="{{series3Name}}" 
       xAxisTitle="{{xAxisTitle}}"
       yAxisTitle="{{yAxisTitle}}"
+      yAxisMin="{{yAxisMin}}"
+      yAxisMax="{{yAxisMax}}"
       thousandsSep="{{thousandsSep}}"
       valueDecimals="{{valueDecimals}}"
       valuePrefix="{{valuePrefix}}"
@@ -74,7 +76,6 @@ A Thelma component for displaying output
       valueDecimals: 0,
       legend: true,
       seriesColors: [],
-      valuePrefix: '$',
       ready: function(){
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();

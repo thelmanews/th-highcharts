@@ -218,6 +218,9 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
         this.chartOptions.yAxis.title.text = this.yAxisTitle || '';  
 
+        this.chartOptions.yAxis.min = this.yAxisMin || null;
+        this.chartOptions.yAxis.max = this.yAxisMax || null;
+
         this.chartOptions.yAxis.tickInterval = this.yTickInterval;
         this.chartOptions.xAxis.tickInterval = this.xTickInterval;
 
