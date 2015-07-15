@@ -180,7 +180,6 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.plotOptions.bar.allowPointSelect = false;
 
         // Override original padding, which sets the legend too close to the chart
-        console.log(this.chartOptions.chart.marginBottom);
         if (this.legend){
           this.chartOptions.legend.enabled = true;
           this.chartOptions.chart.marginBottom = 80;
