@@ -283,8 +283,8 @@ A Thelma component that wraps the Highcharts library
       },
 
       _buildChart: function(){
-        // this.chartOptions.chart.renderTo = this.$.chart;
-        // this.chartOptions.series = this.seriesData;
+        this.chartOptions.chart.renderTo = this.$.chart;
+        this.chartOptions.series = this.seriesData;
       },
       redraw: function(){
         this._setupChart();
@@ -293,8 +293,8 @@ A Thelma component that wraps the Highcharts library
       },
       animate: function(){
         // Reinstantiate the chart
-        this.chartOptions.chart.renderTo = this.$.chart;
-        this.chartOptions.series = this.seriesData;
+        // this.chartOptions.chart.renderTo = this.$.chart;
+        // this.chartOptions.series = this.seriesData;
         this.chart = new Highcharts.Chart(this.chartOptions);
         // TODO: delay animation until this is called instead of reinstantiating chart
 
