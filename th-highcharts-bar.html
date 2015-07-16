@@ -16,7 +16,7 @@ A Thelma component for displaying output
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartTitle chartSubtitle chartOptions credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legend legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
+<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartTitle chartSubtitle credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legend legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
   
   <template>
     <style>
@@ -30,7 +30,8 @@ A Thelma component for displaying output
 
     <th-highcharts id="chart"
       chartData="{{chartData}}" 
-      chartOptions="{{chartOptions}}" 
+      chartType="{{chartType}}"
+      chartOptions="{{wsjOptions}}" 
       chartWidth="{{chartWidth}}"
       chartHeight="{{chartHeight}}"
       chartTitle="{{chartTitle}}" 
@@ -75,6 +76,7 @@ A Thelma component for displaying output
       valueDecimals: 0,
       legend: true,
       seriesColors: [],
+      chartType: 'bar',
       ready: function(){
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
@@ -94,8 +96,8 @@ A Thelma component for displaying output
         // 1) Define reference to component
         var self = this; 
         
-        // 2) Copy/paste tooltip formatter function from chartOptions
-        this.chartOptions.tooltip.formatter = function(){
+        // 2) Copy/paste tooltip formatter function from wsjOptions
+        this.wsjOptions.tooltip.formatter = function(){
           var html = '<div class="tooltip tooltip-table tooltip-narrow">';
               html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
               html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
@@ -138,7 +140,7 @@ A Thelma component for displaying output
         }
 
       },
-      chartOptions: {
+      wsjOptions: {
           colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
           chart: {
             type: 'bar',

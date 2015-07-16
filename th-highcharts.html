@@ -69,6 +69,7 @@ A Thelma component that wraps the Highcharts library
 
         // Select container for chart
         this.chartOptions.chart.renderTo = this.$.chart;
+        this.chartOptions.chart.type = this.chartType;
 
         // Parse data and convert to Highcharts compatible format
         this.seriesData = this._parseData(this.chartData);
