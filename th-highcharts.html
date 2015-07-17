@@ -73,19 +73,44 @@ A Thelma component that wraps the Highcharts library
 
         // Parse data and convert to Highcharts compatible format
         this.seriesData = this._parseData(this.chartData);
-        // this.seriesDataStart = this.seriesData.map(function(series){
-        //   var startingData = series.data.map(function(value){return 0;});
-        //   series.data = startingData;
-        //   return series;
-        // })
-
-        this._setDimensions();
-        this._overrideDefaultSettings();
-        this._setupTitles();
-        this._setupAxes();
-        this._formatValues();
-        this._applyThemeColors();
         
+        // Chart settings
+        this._setDimensions();
+        this._setupTitles();
+        this._applyCredits();
+        this._chartSpecificSettings(this.chartType);
+      },
+      _chartSpecificSettings: function(chartType){
+        switch (chartType){
+          case 'bar':
+            this._setupAxes();
+            this._formatValues();
+            this._formatLegend();
+            this._applyThemeColors();
+            this._removeBarBorders(chartType);
+            break;
+          case 'column':
+            this._setupAxes();
+            this._formatValues();
+            this._formatLegend();
+            this._applyThemeColors();
+            this._removeBarBorders(chartType);
+            break;
+          case 'line':
+            this._setupAxes();
+            this._formatValues();
+            this._formatLegend();
+            this._applyThemeColors();
+            break;
+          case 'pie':
+            this._formatLegend();
+            this._applyThemeColors();
+            // this._formatValues();
+            break;
+          default:
+            // TODO
+            break;
+        }
       },
       _parseData: function(data){
         var self = this;
@@ -106,7 +131,7 @@ A Thelma component that wraps the Highcharts library
             // If each item in array is an object
             } else if (typeof(row) === 'object'){
               // This is specific to Thelma formatted data which has 'label', 'series1', 'series2', 'series3' properties
-              if (row.label && row.series1){
+              if (row.label && (row.series1 || row.value)){
                 this.thelmaData = true;
               } else {
                 // TODO: find a way to parse data in a normal / not-Thelma way and incorporate here
@@ -123,49 +148,70 @@ A Thelma component that wraps the Highcharts library
        */
       _parseDataThelma: function(data){
         var chartData = [];
+        var self = this;
         
         // Set x-axis labels
         this.chartOptions.xAxis.categories = data.map(function(row){ return row.label; });
 
-        // Divide up series data 
-        for(var i=1; i<=3; i++){
-          // Skip if there is no data in a series
-          if (!data[0]['series'+i] || data[0]['series'+i] === 0){
-            continue;
-          }
+        if (this.chartType != 'pie'){
+          // Divide up series data 
+          for(var i=1; i<=3; i++){
+            // Skip if there is no data in a series
+            if (!data[0]['series'+i] || data[0]['series'+i] === 0){
+              continue;
+            }
 
-          // Otherwise, create Highcharts series object
-          var series = {};
-          series.style = {opacity: 0};
-          series.name = this['series'+i+'Name'];
-          series.data = data.map(function(row){ 
-            var value = row['series'+i];
-            if (value || value === 0){
-              return parseFloat(value); // convert string values into numbers
+            // Otherwise, create Highcharts series object
+            
+            var series = {};
+            series.style = {opacity: 0};
+            series.name = this['series'+i+'Name'];
+            series.data = data.map(function(row){ 
+              var value = row['series'+i];
+              if (value || value === 0){
+                return parseFloat(value); // convert string values into numbers
+              }
+            });
+
+            chartData.push(series); // collect all series in chartData
+          }
+        } else {
+          var data = data.map(function(datapoint){ 
+            return {
+              name: datapoint.label,
+              y: parseFloat(datapoint.value),
+              color: datapoint.color
             }
           });
 
-          chartData.push(series); // collect all series in chartData
+          var series = {
+            data: data
+          };
+
+          chartData.push(series);
+
+          
         }
+
         return chartData;
       },
-
       _setDimensions: function(){
         // chartWidth and chartHeight are calculated in parent element due to faster load time
         this.chartOptions.chart.width = this.chartWidth;
         this.chartOptions.chart.height = this.chartHeight;
       },
-      _overrideDefaultSettings: function(){
-        // Override default yAxis title (Values)
-        this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
-        this.chartOptions.yAxis.title.margin = 5; // distance between axis labels and title
+      _removeBarBorders: function(chartType){
+        this.chartOptions.plotOptions[chartType] = this.chartOptions.plotOptions[chartType] || {};
 
-        // Override y-axis label rotation
-        this.chartOptions.yAxis.labels.autoRotation = -45;
+        // Override ability to click on bar, which changes color to gray
+        this.chartOptions.plotOptions[chartType].allowPointSelect = false;
+    
+        // Remove the border on bars
+        this.chartOptions.plotOptions[chartType].borderWidth = 0;
 
-        // Override default yAxis title (Values)
-        this.chartOptions.xAxis.title = this.chartOptions.xAxis.title || {};
-        this.chartOptions.xAxis.title.margin = 5; // distance between axis labels and title
+      },
+      _applyCredits: function(){
+        
 
         // Override default credits (highcharts.com)
         this.chartOptions.credits = {
@@ -176,29 +222,8 @@ A Thelma component that wraps the Highcharts library
             x: 10
           }
         };
-
-        // Override ability to click on bar, which changes color to gray
-        this.chartOptions.plotOptions.bar.allowPointSelect = false;
-
         // Override original padding, which sets the legend too close to the chart
-        if (this.legend){
-          this.chartOptions.legend.enabled = true;
-          this.chartOptions.chart.marginBottom = 80;
-          this.chartOptions.legend.title = this.chartOptions.legend.title || {};
-          this.chartOptions.legend.title.text = this.legendTitle;
-        } else {
-          this.chartOptions.legend.enabled = false;
-          this.chartOptions.chart.marginBottom = 40;
-        }
-
-        // Remove the border on bars
-        // TODO: make this work for different types of charts
-        this.chartOptions.plotOptions.bar = this.chartOptions.plotOptions.bar || {};
-        this.chartOptions.plotOptions.bar.borderWidth = 0;
-
-
       },
-      
       _setupTitles: function(){
         // Set and align title and subtitle
         this.chartOptions.title = {
@@ -209,22 +234,33 @@ A Thelma component that wraps the Highcharts library
           align: 'left',
           text: this.chartSubtitle
         };        
-
-        
       },
       _setupAxes: function(){
         this.chartOptions.xAxis.title = this.chartOptions.xAxis.title || {};
+        this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
+
+        // Override default yAxis title (Values)
+        this.chartOptions.yAxis.title.margin = 5; // distance between axis labels and title
+
+        // Override y-axis label rotation
+        this.chartOptions.yAxis.labels.autoRotation = -45;
+
+        // Override default yAxis title (Values)
+        this.chartOptions.xAxis.title.margin = 5; // distance between axis labels and title
+
+        // Set xAxis title
         this.chartOptions.xAxis.title.text = this.xAxisTitle || '';  
         
-        this.chartOptions.yAxis.title = this.chartOptions.yAxis.title || {};
+        // Set yAxis title
         this.chartOptions.yAxis.title.text = this.yAxisTitle || '';  
 
+        // Set yAxis bounds
         this.chartOptions.yAxis.min = this.yAxisMin || null;
         this.chartOptions.yAxis.max = this.yAxisMax || null;
 
+        // Set axis intervals
         this.chartOptions.yAxis.tickInterval = this.yTickInterval ? parseFloat(this.yTickInterval) : this.yTickInterval;
         this.chartOptions.xAxis.tickInterval = this.xTickInterval ? parseFloat(this.xTickInterval) : this.xTickInterval;
-
       },
       _formatValues: function(){
         var self = this;
@@ -232,6 +268,19 @@ A Thelma component that wraps the Highcharts library
         var suffix = self.valueSuffix || '';
         this.chartOptions.yAxis.labels.formatter = function(){
           return prefix + Highcharts.numberFormat(this.value, self.valueDecimals, '.', self.thousandsSep) + suffix;
+        }
+      },
+      _formatLegend: function(){
+        this.chartOptions.legend = this.chartOptions.legend || {};
+        
+        if (this.legend){
+          this.chartOptions.legend.enabled = true;
+          this.chartOptions.chart.marginBottom = 80;
+          this.chartOptions.legend.title = this.chartOptions.legend.title || {};
+          this.chartOptions.legend.title.text = this.legendTitle;
+        } else {
+          this.chartOptions.legend.enabled = false;
+          this.chartOptions.chart.marginBottom = 40;
         }
       },
       _applyThemeColors: function(){
@@ -255,31 +304,29 @@ A Thelma component that wraps the Highcharts library
         // Apply series colors
         this.chartOptions.colors = seriesColors;
 
-        // Apply text color to axis values, titles, legend
+        if (this.chartType != 'pie'){
+          // Apply text color to axis values, titles, legend
+          this.chartOptions.xAxis.title.style = this.chartOptions.xAxis.title.style || {};
+          this.chartOptions.xAxis.title.style.color = fgColor;
+          this.chartOptions.xAxis.labels.style.color = fgColor;
 
-        this.chartOptions.xAxis.title.style = this.chartOptions.xAxis.title.style || {};
-        this.chartOptions.xAxis.title.style.color = fgColor;
-        this.chartOptions.xAxis.labels.style.color = fgColor;
+          this.chartOptions.xAxis.gridLineColor = this.gridLineColor || fgColor;
+          this.chartOptions.xAxis.lineColor = this.gridLineColor || fgColor;
+          this.chartOptions.xAxis.tickColor = this.gridLineColor || fgColor;
+          
+          this.chartOptions.yAxis.title.style = this.chartOptions.yAxis.title.style || {};
+          this.chartOptions.yAxis.title.style.color = fgColor;
+          this.chartOptions.yAxis.labels.style.color = fgColor;
+          this.chartOptions.yAxis.gridLineColor = this.gridLineColor || fgColor;
+          this.chartOptions.yAxis.tickColor = this.gridLineColor || fgColor;
+          
+          this.chartOptions.title.style = this.chartOptions.title.style || {};
+          this.chartOptions.subtitle.style = this.chartOptions.subtitle.style || {};
+          this.chartOptions.title.style.color = this.chartOptions.subtitle.style.color = fgColor;
 
-        this.chartOptions.xAxis.gridLineColor = this.gridLineColor || fgColor;
-        this.chartOptions.xAxis.lineColor = this.gridLineColor || fgColor;
-        this.chartOptions.xAxis.tickColor = this.gridLineColor || fgColor;
-        
-        this.chartOptions.yAxis.title.style = this.chartOptions.yAxis.title.style || {};
-        this.chartOptions.yAxis.title.style.color = fgColor;
-        this.chartOptions.yAxis.labels.style.color = fgColor;
-        this.chartOptions.yAxis.gridLineColor = this.gridLineColor || fgColor;
-        this.chartOptions.yAxis.tickColor = this.gridLineColor || fgColor;
-        
-
-        // console.log(this.gridLineColor);
-        this.chartOptions.title.style = this.chartOptions.title.style || {};
-        this.chartOptions.subtitle.style = this.chartOptions.subtitle.style || {};
-        this.chartOptions.title.style.color = this.chartOptions.subtitle.style.color = fgColor;
-
-        this.chartOptions.legend.itemStyle.color = fgColor;
-        this.chartOptions.chart.backgroundColor = bgColor || null;
-
+          this.chartOptions.legend.itemStyle.color = fgColor;
+          this.chartOptions.chart.backgroundColor = bgColor || null;
+        }
 
       },
 

@@ -243,6 +243,29 @@ A component that sets WSJ default settings for the Highcharts bar chart
         
         // 2) Copy/paste tooltip formatter function from wsjOptions
         this.wsjOptions.tooltip.formatter = function(){
+            var points = this.point;
+            var html = '<h4 class="tooltip"><span style="color: ' + points.color + '">'+this.key+': </span>';
+
+
+                var value = points.y;
+                var num_decimals = self.valueDecimals|| null;
+                var num_decimals_base = 0;
+
+                    value             = Highcharts.numberFormat(value, num_decimals, '.', '');
+                if(self.valuePrefix){
+                  value = self.valuePrefix + value;
+                }
+                if(self.valueSuffix){
+                  value = value + self.valueSuffix
+                }
+
+                html +=  value + '</h4>';
+
+            return html;
+
+
+
+
           var html = '<div class="tooltip tooltip-table tooltip-narrow">';
               html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
               html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
