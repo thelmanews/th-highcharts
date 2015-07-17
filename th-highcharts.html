@@ -56,9 +56,9 @@ A Thelma component that wraps the Highcharts library
       thousandsSep: '',
       animateOnInit: false,
       observe: {
-        'legend': 'redraw',
-        'chartWidth': 'resize',
-        'chartHeight': 'resize'
+        // 'legend': 'redraw',
+        // 'chartWidth': 'resize',
+        // 'chartHeight': 'resize'
       },
       ready: function () {
         // this._setupChart();
@@ -66,7 +66,7 @@ A Thelma component that wraps the Highcharts library
         // this.chart = new Highcharts.Chart(this.chartOptions);
       },
       _setupChart: function(){
-
+        
         // Select container for chart
         this.chartOptions.chart.renderTo = this.$.chart;
         this.chartOptions.chart.type = this.chartType;
@@ -293,19 +293,18 @@ A Thelma component that wraps the Highcharts library
         this.animate();
       },
       animate: function(){
-        // Reinstantiate the chart
-        this.chartOptions.chart.renderTo = this.$.chart;
+        // Set the series data and reinstantiate the chart 
         this.chartOptions.series = this.seriesData;
         this.chart = new Highcharts.Chart(this.chartOptions);
-        // TODO: delay animation until this is called instead of reinstantiating chart
-
       },
       reset: function(){
         var numSeries = this.seriesData.length;
 
         // Remove each series
-        for (var i=0; i<numSeries; i++){
-          this.chart.series[0].remove(true);
+        if (numSeries){
+          for (var i=0; i<numSeries; i++){
+            this.chart.series[0].remove(true);
+          }
         }
 
       },
