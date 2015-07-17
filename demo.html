@@ -6,13 +6,28 @@
     <script src="../webcomponentsjs/webcomponents.js"></script>
     <link rel="import" href="th-highcharts.html">
     <link rel="import" href="th-highcharts-bar.html">
-
-    
+    <link rel="import" href="th-highcharts-line.html">
+    <link rel="import" href="th-highcharts-column.html">
   </head>
+  <style type="text/css">
+    div {
+      display: inline-block;
+      padding: 10px;
+    }
+
+  </style>
   <body unresolved>
   
     <div style="width: 420px; height: 300px;">
       <th-highcharts-bar style="width: 100%; height: 100%;" animateOnInit="true"></th-highcharts-bar>
+    </div>
+
+    <div style="width: 420px; height: 300px;">
+      <th-highcharts-line style="width: 100%; height: 100%;" animateOnInit="true"></th-highcharts-line>
+    </div>
+
+    <div style="width: 420px; height: 300px;">
+      <th-highcharts-column style="width: 100%; height: 100%;" animateOnInit="true"></th-highcharts-column>
     </div>
   </body>
 </html>
