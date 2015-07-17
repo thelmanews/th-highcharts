@@ -1,0 +1,292 @@
+<link rel="import" href="../polymer/polymer.html"> 
+<link rel="import" href="../th-d3-chart/th-d3-chart.html"> 
+<link rel="import" href="th-highcharts.html"> 
+
+<!--
+A component that sets WSJ default settings for the Highcharts bar chart
+
+##### Example
+
+    <th-highcharts-pie></th-highcharts-pie>
+
+@element th-highcharts-pie
+@blurb A component that sets WSJ default settings for the Highcharts bar chart
+@status alpha
+@author Thelma team
+@homepage http://thelmanews.github.io/th-highcharts-pie
+-->
+
+<polymer-element extends="th-d3-chart" name="th-highcharts-pie"  attributes="chartTitle chartSubtitle credits creditsURL yAxisTitle xAxisTitle legend legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep  textColor backgroundColor xTickInterval yTickInterval gridLineColor">
+  
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+    </style>
+
+    <th-highcharts id="chart"
+      chartData="{{chartData}}" 
+      chartType="{{chartType}}"
+      chartOptions="{{wsjOptions}}" 
+      chartWidth="{{chartWidth}}"
+      chartHeight="{{chartHeight}}"
+      chartTitle="{{chartTitle}}" 
+      chartSubtitle="{{chartSubtitle}}" 
+      xAxisTitle="{{xAxisTitle}}"
+      yAxisTitle="{{yAxisTitle}}"
+      yAxisMin="{{yAxisMin}}"
+      yAxisMax="{{yAxisMax}}"
+      thousandsSep="{{thousandsSep}}"
+      valueDecimals="{{valueDecimals}}"
+      valuePrefix="{{valuePrefix}}"
+      valueSuffix="{{valueSuffix}}"
+      legend="{{legend}}"
+      legendTitle="{{legendTitle}}"
+      textColor="{{textColor}}"
+      backgroundColor="{{backgroundColor}}"
+      gridLineColor="{{gridLineColor}}"
+      xTickInterval="{{xTickInterval}}"
+      yTickInterval="{{yTickInterval}}"
+      credits="{{credits}}"
+      creditsURL="{{creditsURL}}"
+      >
+    </th-highcharts>
+
+  </template>
+  
+  <script>
+    Polymer('th-highcharts-pie', {
+      /**
+       * 'chartData' allows for up to 3 series of data. It must follow this format with keys being: label, series1, series2, series3
+       * @type {Array}
+       */
+      chartData: [
+         {"label": "Germany", "value": "100000", "color": "" },
+         {"label": "France", "value": "80000", "color": "" },
+         {"label": "Italy", "value": "40000", "color": "" }
+      ],
+      /**
+       * 'valueDecimals' is the number of decimal places to display in values in the chart
+       * @type {Number}
+       */
+      valueDecimals: 0,
+      /**
+       * 'legend' is a switch display or hide the legend
+       * @type {Boolean}
+       */
+      legend: true,
+      /**
+       * 'chartType' is initialized as bar by default
+       * @type {String}
+       */
+      chartType: 'pie',
+      ready: function(){
+        // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
+        this.chartHeight = this.computeHeight();
+        this.chartWidth = this.computeWidth();
+        this._formatTooltipValues();
+        this.$.chart._setupChart();
+        this.$.chart._buildChart();
+      },
+      animate: function(){ 
+        this.$.chart.animate();
+      },
+      reset: function(){ 
+        this.$.chart.reset();
+      },
+      resize: function(){
+        this.$.chart.resize();
+      },
+      /**
+       * 'wsjOptions' are the defaults defined in the WSJ highcharts repo https://github.com/dowjones/custom-data-charts/blob/master/_js/defaults.types.bar.js
+       *
+       * UPDATING INSTRUCTIONS:
+       * 1) Copy/paste the object defined in defaults.types.bar.js into the wsjOptions object
+       * 2) Replace jQuery with vanilla JavaScript
+       * 
+       * @type {Object}
+       */
+      wsjOptions: {
+        colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
+        chart: {
+          height: 400,
+          marginBottom: 50,
+          style: {
+            maxWidth: '1275px',
+            color: '#000000',
+            fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontWeight: 'normal',
+            fontStyle: 'normal',
+            fontSize: 13
+          },
+          type: "pie",
+          events: {
+            load: function(e){
+
+              // make the tick that has the 0 value black
+            var chart = e.target;
+            var index = chart.yAxis[0].tickPositions.indexOf(0);
+            index = (index === 0) ? chart.yAxis[0].tickPositions.length - 1: index;
+
+            // $chart.find('.highcharts-axis:eq(1) path:eq('+ index +')').attr('stroke', '#000');
+            }
+          },
+          
+          marginLeft: 0,
+        },
+        exporting: {
+            enabled: false
+        },
+        tooltip: {
+          enabled: true,
+          borderWidth: 1,
+          borderColor: '#ccc',
+          useHTML: true,
+          shared: true,
+          style: {
+            opacity: 1,
+          },
+          formatter: function(){
+            // console.log(this);
+            var points = this.point;
+            var html = '<h4 class="tooltip"><span style="color: ' + points.color + '">'+this.key+': </span>';
+
+
+                var value = points.y;
+                var num_decimals      = this.series.chart.options.yAxisDecimal || null;
+                var num_decimals_base = 0;
+
+                    value             = Highcharts.numberFormat(value, num_decimals, '.', '');
+                    console.log(value);
+                if(this.series.chart.options.yAxisUnitPlace1 == 'prefix'){
+                  value = this.series.chart.options.yAxisUnit1 + value;
+                }
+                if(this.series.chart.options.yAxisUnitPlace2 == 'suffix'){
+                  value = value + this.series.chart.options.yAxisUnit2;
+                }
+                console.log(value);
+
+                html +=  value + '</h4>';
+
+            return html;
+          }
+        },
+        plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              series: {
+                point: {
+                    events: {
+                      select: function() {
+                          newColor = prompt('Color?');
+                          this.update({
+                              color:{
+                                  fillColor:newColor,
+                                  lineColor:'red',
+                              }
+                          })
+                      }
+                    }
+                }
+              },
+              dataLabels: {
+                softConnector: false,
+              }
+            }
+        },
+        xAxis: {
+          type: 'category',
+          // x: ($(window).width() > 500) ? 0 : -16,
+          // align: ($(window).width() > 500) ? 'right' : 'left',
+          // verticalAlign: ($(window).width() > 500) ? 'middle' : 'top',
+          // layout: ($(window).width() > 500) ? 'vertical' : 'horizontal',
+          // floating: ($(window).width() > 500) ? false : true,
+          title: {
+              style: {
+                  fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontSize: '12px',
+                  fontWeight: 800
+              }
+          },
+          itemStyle: {
+              fontSize: 12,
+              fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+              fontStyle: 'normal',
+              color: '#231F20'
+          }
+        },
+        position: {
+            align: 'left',
+            x: 10
+        }
+      },
+      /**
+       * 'formatTooltipValues' reformats the tooltips that are initially formatted in 'wsjChartOptions'. 
+       * This is necessary because number formats (valueDecimals, valuePrefix, valueSuffix) for the tooltip need to be 
+       * passed into the function and a reference to self (the component) needs to be established in order to do so.
+       *
+       * UPDATING INSTRUCTIONS:
+       * 1) Define a reference to self
+       * 2) Redefine this.wsjOptions.tooltip.formatter by first copy/pasting the original
+       * 3) Replace num_decimals with self.valueDecimals
+       * 4) Replace jQuery loops with vanilla JavaScript forEach loops
+       * 5) Add valuePrefix and valueSuffix to the value 
+       */
+      _formatTooltipValues: function(){
+        // 1) Define reference to component
+        var self = this; 
+        
+        // 2) Copy/paste tooltip formatter function from wsjOptions
+        this.wsjOptions.tooltip.formatter = function(){
+          var html = '<div class="tooltip tooltip-table tooltip-narrow">';
+              html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
+              html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
+          var points = this.points; 
+
+          var value = this.y;
+          // 3) Redefine number of decimal places with component attribute
+          var num_decimals = self.valueDecimals|| null;
+          var num_decimals_base = 0;
+
+
+            // REPLACED WITH BELOW
+            // $.each(points, function(i, point){
+            //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+            //   html += '<td>' + value + '</td></tr>';
+            // });
+
+            // REPLACED ABOVE WITH THIS
+            points.forEach(function(point, i){
+              // 4) Include thousandsSep attribute in format
+              value = Highcharts.numberFormat(point.y, num_decimals, '.', self.thousandsSep);
+
+              // 5) Include prefix in value foramt
+              if(self.valuePrefix){
+                value = self.valuePrefix + value;
+              }
+
+              // 6) Include suffix in value foramt
+              if(self.valueSuffix){
+                value = value + self.valueSuffix;
+              }
+              html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
+              html += '<td>' + value + '</td></tr>';
+            });
+
+
+            html += '</table></div>';
+
+          return html;
+        }
+
+      }
+      
+    });
+  </script>
+</polymer-element>
+      

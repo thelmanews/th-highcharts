@@ -136,33 +136,35 @@ A component that sets WSJ default settings for the Highcharts bar chart
        * @type {Object}
        */
       wsjOptions: {
-          colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
-          chart: {
-            type: 'column',
-            height: 400, 
-            marginBottom: 60,
-            style: {
-              maxWidth: '1275px', 
-              color: '#000000',
-              fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-              fontWeight: 'normal',
-              fontStyle: 'normal',
-              fontSize: 13 // HOW WILL THIS SCALE FOR DESKTOP VS MOBILE
-            },
+        colors: ['#0098db', '#ce3139', '#edc639', '#727272', '#63bc51', '#bfbfbf'],
+        chart: {
+          type: 'column',
+          height: 400,
+          marginBottom: 60,
+          // marginTop: 50,
+          style: {
+            maxWidth: '1275px',
+            color: '#000000',
+            fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontWeight: 'normal',
+            fontStyle: 'normal',
+            fontSize: 13
+          },
             events: {
                 load: function(e){
+
                   // make the tick that has the 0 value black
                   var chart = e.target;
                   var index = chart.yAxis[0].tickPositions.indexOf(0);
                   index = (index === 0) ? chart.yAxis[0].tickPositions.length - 1: index;
-                
-                // TODO: FIX THIS SO IT DOESN'T THROW ERROR
+
                 // $chart.find('.highcharts-axis:eq(1) path:eq('+ index +')').attr('stroke', '#000');
               }
             },
+            // marginTop: ($(window).width() > 500) ? 10 : 0,
+            // marginLeft: 0,
         },
-        legend: { 
-          floating: false,
+        legend: {
           title: {
               style: {
                   fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
@@ -189,13 +191,13 @@ A component that sets WSJ default settings for the Highcharts bar chart
               var html = '<div class="tooltip tooltip-table tooltip-narrow">';
                 html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
                 html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
-              var points = this.points; // TODO: CHECK 'THIS' REFERENCES
+              var points = this.points;
 
                 var value = this.y;
                   var num_decimals      = points[0].series.chart.options.yAxisDecimal || null;
                   var num_decimals_base = 0;
 
-                      value =  Highcharts.numberFormat(value, num_decimals, '.', '');
+                      value             = Highcharts.numberFormat(value, num_decimals, '.', '');
 
                   if(points[0].series.chart.options.yAxisUnitPlace1 == 'prefix'){
                     value = points[0].series.chart.options.yAxisUnit1 + value;
@@ -204,18 +206,10 @@ A component that sets WSJ default settings for the Highcharts bar chart
                     value = value + points[0].series.chart.options.yAxisUnit2;
                   }
 
-                // REPLACED WITH BELOW
-                // $.each(points, function(i, point){
-                //   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
-                //   html += '<td>' + value + '</td></tr>';
-                // });
-
-                // REPLACED ABOVE WITH THIS
                 points.forEach(function(point, i){
                   html += '<tr><td style="color: ' + point.series.color + '">'+point.series.name+': </td>';
                   html += '<td>' + value + '</td></tr>';
                 });
-
 
                 html += '</table></div>';
 
@@ -230,14 +224,13 @@ A component that sets WSJ default settings for the Highcharts bar chart
                     // var chart   = $chart.highcharts();
                     var series  = this.chart.series;
                     var visible = [];
-                    
-                    // REPLACED WITH BELOW
+                    console.log(this);
                     // $.each(series, function(i, item){
-                    //  if(item.visible === false){
+                    //   if(item.visible === false){
                     //     visible.push(item.visible);
-                    //  }
+                    //   }
                     // });
-                    
+
                     // REPLACED ABOVE WITH THIS
                     series.forEach(function(item, i){
                       if(item.visible === false){
@@ -245,17 +238,28 @@ A component that sets WSJ default settings for the Highcharts bar chart
                       }
                     })
 
+
                     if(visible.length + 1 === series.length){
                       if(!this_isVisible){
-                        return; 
+                        return;
                       }
                       return false;
                     }
                   }
                 }
             },
-            bar: {
+            column: {
               allowPointSelect: true,
+              point: {
+                  events: {
+                    select: function() {
+                        newColor = prompt('Color?');
+                        this.update({
+                            color: newColor
+                        })
+                    }
+                  }
+              },
               stacking: false, // $scope.builder.chart.stacked,
               dataLabels: {
                 softConnector: false,
@@ -263,6 +267,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
             }
         },
         xAxis: {
+          reversed: false,
           minTickInterval: 1,
           lineColor: '#999999',
           tickLength: 8,
@@ -292,25 +297,25 @@ A component that sets WSJ default settings for the Highcharts bar chart
               // offset: -10,
               labels: {
                 allowDecimals: false,
+                y: -4,
+                x: 30,
                 align: 'right',
-                // y: -4,
-                // x: 30,
                 style: {
                     color: '#000000',
                     fontFamily: "'Whitney SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                     fontWeight: 'normal',
                     fontStyle: 'normal',
-                    // paddingRight: 25,
-                    fontSize: 13
+                    paddingRight: '25px',
+                    fontSize: '13px'
                 },
                 formatter: function () {
 
-                  // TODO: CHECK 'THIS' REFERENCES
+
+
                   var num_decimals      = this.chart.options.yAxisDecimal || null;
                   var num_decimals_base = 0;
                   var value             = this.value;
                       value             = Highcharts.numberFormat(value, num_decimals, '.', '');
-
 
                       if(this.chart.options.yAxisUnitPlace1 == 'prefix'){
                         value = (this.isLast) ? this.chart.options.yAxisUnit1 + value : '<span style="opacity: 0">'+ this.chart.options.yAxisUnit1 +'</span>' + value;
@@ -322,17 +327,17 @@ A component that sets WSJ default settings for the Highcharts bar chart
                       value = (this.isFirst) ? Highcharts.numberFormat(value, num_decimals_base, '.', '') : value;
 
                      return value;
-                  },
+                  }
               },
               reversed: false,
               gridLineColor: '#A8A7A5',
               tickColor: '#A8A7A5',
               tickWidth: 1,
-              tickPosition: 'inside',
-              position: {
-                  align: 'left',
-                  x: 10
-              }
+              tickPosition: 'inside'
+        },
+        position: {
+            align: 'left',
+            x: 10
         }
       },
       /**
