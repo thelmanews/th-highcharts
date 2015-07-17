@@ -126,16 +126,10 @@ A component that sets WSJ default settings for the Highcharts bar chart
       resize: function(){
         this.$.chart.resize();
       },
-      /***************************************************/
-      /***** INSTRUCTIONS FOR UPDATING WITH WSJ CODE *****/
-      /***************************************************/
-      /* Step 1: Update wsjOptions object
-      /* Step 2: Update _formatTooltipValues method
-
       /**
        * 'wsjOptions' are the defaults defined in the WSJ highcharts repo https://github.com/dowjones/custom-data-charts/blob/master/_js/defaults.types.bar.js
        *
-       * To update, 
+       * UPDATING INSTRUCTIONS:
        * 1) Copy/paste the object defined in defaults.types.bar.js into the wsjOptions object
        * 2) Replace jQuery with vanilla JavaScript
        * 
@@ -345,7 +339,8 @@ A component that sets WSJ default settings for the Highcharts bar chart
        * 'formatTooltipValues' reformats the tooltips that are initially formatted in 'wsjChartOptions'. 
        * This is necessary because number formats (valueDecimals, valuePrefix, valueSuffix) for the tooltip need to be 
        * passed into the function and a reference to self (the component) needs to be established in order to do so.
-       * 
+       *
+       * UPDATING INSTRUCTIONS:
        * 1) Define a reference to self
        * 2) Redefine this.wsjOptions.tooltip.formatter by first copy/pasting the original
        * 3) Replace num_decimals with self.valueDecimals
