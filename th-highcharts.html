@@ -259,8 +259,8 @@ A Thelma component that wraps the Highcharts library
         this.chartOptions.yAxis.max = this.yAxisMax || null;
 
         // Set axis intervals
-        this.chartOptions.yAxis.tickInterval = this.yTickInterval ? parseFloat(this.yTickInterval) : this.yTickInterval;
-        this.chartOptions.xAxis.tickInterval = this.xTickInterval ? parseFloat(this.xTickInterval) : this.xTickInterval;
+        this.chartOptions.yAxis.tickInterval = this.yTickInterval ? parseFloat(this.yTickInterval) : null;
+        this.chartOptions.xAxis.tickInterval = this.xTickInterval ? parseFloat(this.xTickInterval) : null;
       },
       _formatValues: function(){
         var self = this;
