@@ -91,10 +91,13 @@ A Thelma component that wraps the Highcharts library
             break;
           case 'column':
             this._setupAxes();
+            this._adjustTickMarksY();
             this._formatValues();
             this._formatLegend();
             this._applyThemeColors();
             this._removeBarBorders(chartType);
+            this.chartOptions.chart.marginTop = 15;
+
             break;
           case 'line':
             this._setupAxes();
@@ -261,6 +264,11 @@ A Thelma component that wraps the Highcharts library
         // Set axis intervals
         this.chartOptions.yAxis.tickInterval = this.yTickInterval ? parseFloat(this.yTickInterval) : null;
         this.chartOptions.xAxis.tickInterval = this.xTickInterval ? parseFloat(this.xTickInterval) : null;
+      },
+      _adjustTickMarksY: function(){
+        // For column chart, tickmarks need to be pushed left and extended, otherwise bars overlap axis
+        this.chartOptions.yAxis.offset = 20;
+        this.chartOptions.yAxis.tickLength = 20;
       },
       _formatValues: function(){
         var self = this;
