@@ -280,7 +280,7 @@ A Thelma component that wraps the Highcharts library
           this.chartOptions.legend.title.text = this.legendTitle;
         } else {
           this.chartOptions.legend.enabled = false;
-          this.chartOptions.chart.marginBottom = 40;
+          this.chartOptions.chart.marginBottom = undefined;
         }
       },
       _applyThemeColors: function(){
@@ -325,6 +325,8 @@ A Thelma component that wraps the Highcharts library
           this.chartOptions.title.style.color = this.chartOptions.subtitle.style.color = fgColor;
 
           this.chartOptions.legend.itemStyle.color = fgColor;
+          this.chartOptions.legend.itemHoverStyle = this.chartOptions.legend.itemHoverStyle || {};
+          this.chartOptions.legend.itemHoverStyle.color = fgColor;
           this.chartOptions.chart.backgroundColor = bgColor || null;
         }
 
