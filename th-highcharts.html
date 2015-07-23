@@ -47,6 +47,8 @@ A Thelma component that wraps the Highcharts library
       // chartOptions: {
       //   // TODO: set basic default options
       // }, 
+      chartTitle: 'title',
+      // chartSubtitle: 'subtitle',
       series1Name: 'Series 1',
       series2Name: 'Series 2',
       series3Name: 'Series 3',
@@ -96,7 +98,10 @@ A Thelma component that wraps the Highcharts library
             this._formatLegend();
             this._applyThemeColors();
             this._removeBarBorders(chartType);
-            this.chartOptions.chart.marginTop = 15;
+
+            // TODO: is there a better way to do this? Why don't the WSJ settings account for these issues?
+            this.chartOptions.chart.spacingTop = 15; // This counteracts the negative offset of yAxis tick labels
+            this.chartOptions.subtitle.style.paddingBottom = 10; // This creates space between subtitle and chart area
 
             break;
           case 'line':
