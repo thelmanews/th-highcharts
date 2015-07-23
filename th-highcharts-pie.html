@@ -16,7 +16,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
 @homepage http://thelmanews.github.io/th-highcharts-pie
 -->
 
-<polymer-element extends="th-d3-chart" name="th-highcharts-pie"  attributes="chartTitle chartSubtitle credits creditsURL yAxisTitle xAxisTitle legend legendTitle valuePrefix valueSuffix valueDecimals thousandsSep textColor backgroundColor gridLineColor">
+<polymer-element extends="th-d3-chart" name="th-highcharts-pie"  attributes="chartTitle chartSubtitle credits creditsURL legend legendTitle valuePrefix valueSuffix valueDecimals thousandsSep textColor backgroundColor gridLineColor">
   
   <template>
     <style>
@@ -36,10 +36,6 @@ A component that sets WSJ default settings for the Highcharts bar chart
       chartHeight="{{chartHeight}}"
       chartTitle="{{chartTitle}}" 
       chartSubtitle="{{chartSubtitle}}" 
-      xAxisTitle="{{xAxisTitle}}"
-      yAxisTitle="{{yAxisTitle}}"
-      yAxisMin="{{yAxisMin}}"
-      yAxisMax="{{yAxisMax}}"
       thousandsSep="{{thousandsSep}}"
       valueDecimals="{{valueDecimals}}"
       valuePrefix="{{valuePrefix}}"
@@ -49,8 +45,6 @@ A component that sets WSJ default settings for the Highcharts bar chart
       textColor="{{textColor}}"
       backgroundColor="{{backgroundColor}}"
       gridLineColor="{{gridLineColor}}"
-      xTickInterval="{{xTickInterval}}"
-      yTickInterval="{{yTickInterval}}"
       credits="{{credits}}"
       creditsURL="{{creditsURL}}"
       >
