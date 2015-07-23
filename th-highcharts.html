@@ -330,16 +330,26 @@ A Thelma component that wraps the Highcharts library
           this.chartOptions.yAxis.labels.style.color = fgColor;
           this.chartOptions.yAxis.gridLineColor = this.gridLineColor || fgColor;
           this.chartOptions.yAxis.tickColor = this.gridLineColor || fgColor;
-          
-          this.chartOptions.title.style = this.chartOptions.title.style || {};
-          this.chartOptions.subtitle.style = this.chartOptions.subtitle.style || {};
-          this.chartOptions.title.style.color = this.chartOptions.subtitle.style.color = fgColor;
 
+          this.chartOptions.legend.itemStyle = this.chartOptions.legend.itemStyle || {};
           this.chartOptions.legend.itemStyle.color = fgColor;
           this.chartOptions.legend.itemHoverStyle = this.chartOptions.legend.itemHoverStyle || {};
           this.chartOptions.legend.itemHoverStyle.color = fgColor;
-          this.chartOptions.chart.backgroundColor = bgColor || null;
+
+        } else {
+          this.chartOptions.plotOptions.pie.dataLabels.color = fgColor;
+          this.chartOptions.plotOptions.pie.dataLabels.style = this.chartOptions.plotOptions.pie.dataLabels.style || {};
+          this.chartOptions.plotOptions.pie.dataLabels.style.textShadow = false;
+          this.chartOptions.plotOptions.pie.borderColor = this.gridLineColor || fgColor;
         }
+
+        this.chartOptions.title.style = this.chartOptions.title.style || {};
+        this.chartOptions.subtitle.style = this.chartOptions.subtitle.style || {};
+        this.chartOptions.title.style.color = this.chartOptions.subtitle.style.color = fgColor;
+        this.chartOptions.chart.backgroundColor = bgColor || null;
+
+      },
+      _adjustPieChartMargins: function(){
 
       },
 
