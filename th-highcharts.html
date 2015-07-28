@@ -100,6 +100,7 @@ A Thelma component that wraps the Highcharts library
             // TODO: is there a better way to do this? Why don't the WSJ settings account for these issues?
             this.chartOptions.chart.spacingTop = 15; // This counteracts the negative offset of yAxis tick labels
             this.chartOptions.subtitle.style.paddingBottom = 10; // This creates space between subtitle and chart area
+            this.chartOptions.yAxis.title.margin = 10; // Column chart needs more margin (default is set at 5) since yAxis labels are shifted
 
             break;
           case 'line':
