@@ -114,7 +114,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
         this.chartWidth = this.computeWidth();
         
         //clone options to avoid shared state
-        this.$.chart.chartOptions = JSON.parse(JSON.stringify(this.wsjOptions));
+        this.$.chart.chartOptions = this.$.chart.clone(this.wsjOptions);
         
         this._formatTooltipValues();
         this.$.chart._setupChart();
@@ -355,7 +355,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
         var self = this; 
         
         // 2) Copy/paste tooltip formatter function from wsjOptions
-        this.wsjOptions.tooltip.formatter = function(){
+        this.$.chart.chartOptions.tooltip.formatter = function(){
           var html = '<div class="tooltip tooltip-table tooltip-narrow">';
               html += '<h6 style="margin-top: 0px;">' +this.points[0].key+'</h6>'
               html += '<table class="table"><tr><th>Name</th><th>Value</th></tr>';
