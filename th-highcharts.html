@@ -387,7 +387,26 @@ A Thelma component that wraps the Highcharts library
         // Resize chart with animation
         // this.chart.setSize(this.chartWidth, this.chartHeight, doAnimation = true);
        
-      }
+      },
+
+      clone: function(obj) {
+        var self = this;
+        if(obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
+          return obj;
+
+        var temp = obj.constructor(); // changed
+
+        for(var key in obj) {
+            if(Object.prototype.hasOwnProperty.call(obj, key)) {
+              obj['isActiveClone'] = null;
+              temp[key] = self.clone(obj[key]);
+              delete obj['isActiveClone'];
+            }
+        }    
+
+        return temp;
+     }
+      
 
     });
   </script>
