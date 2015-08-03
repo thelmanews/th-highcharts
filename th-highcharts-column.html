@@ -31,7 +31,6 @@ A component that sets WSJ default settings for the Highcharts bar chart
     <th-highcharts id="chart"
       chartData="{{chartData}}" 
       chartType="{{chartType}}"
-      chartOptions="{{wsjOptions}}" 
       chartWidth="{{chartWidth}}"
       chartHeight="{{chartHeight}}"
       chartTitle="{{chartTitle}}" 
@@ -113,6 +112,10 @@ A component that sets WSJ default settings for the Highcharts bar chart
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
         this.chartWidth = this.computeWidth();
+      
+        //clone wsjOptions to avoid shared state
+        this.$.chart.chartOptions = JSON.parse(JSON.stringify(this.wsjOptions));
+
         this._formatTooltipValues();
         this.$.chart._setupChart();
         this.$.chart._buildChart();
