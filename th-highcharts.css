@@ -732,7 +732,7 @@ select {
 
 #chart {
     padding: 1em 0;
-    background: #fff;
+    /*background: #fff;*/ /* FOR SOME REASON THIS CANNOT BE OVERRIDDEN BY THE SAME SELECTOR BELOW, SO COMMENT OUT  */
     border-radius: 5px;
     margin: 1em 0;
     border: 1px solid #dbdee2
