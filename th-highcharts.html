@@ -372,7 +372,7 @@ A Thelma component that wraps the Highcharts library
         var numSeries = this.seriesData.length;
 
         // Remove each series
-        if (numSeries){
+        if (numSeries && this.chart && this.chart.series){
           for (var i=0; i<numSeries; i++){
             this.chart.series[0].remove(true);
           }
