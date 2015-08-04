@@ -990,6 +990,7 @@ select {
   margin: 0;
   padding: 0;
   background: none;
+  background-color: none;
 }
 
 /* WSJ styles select .tooltip, but the actual tooltips in the pie charts have .highcharts-tooltip class */
