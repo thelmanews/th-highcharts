@@ -108,7 +108,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
        * @type {String}
        */
       chartType: 'bar',
-      ready: function(){
+      init: function(){
         // It's quicker to get dimensions here vs. in th-highcharts which is one level deeper into shadowDom
         this.chartHeight = this.computeHeight();
         this.chartWidth = this.computeWidth();
