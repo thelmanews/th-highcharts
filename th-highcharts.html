@@ -173,6 +173,9 @@ A Thelma component that wraps the Highcharts library
             var series = {};
             series.style = {opacity: 0};
             series.name = this['series'+i+'Name'];
+            if(this.chartType==='bar') {
+              series.index = 3-i; // to preserve data order for horizontal bar chart
+            }  
             series.data = data.map(function(row){ 
               var value = row['series'+i];
               if (value || value === 0){
@@ -288,6 +291,11 @@ A Thelma component that wraps the Highcharts library
         if (this.legend){
           this.chartOptions.legend.enabled = true;
           this.chartOptions.chart.marginBottom = 80;
+          
+          // to preserve data order for horizontal bar chart
+          if(this.chartType==='bar') {
+            this.chartOptions.legend.reversed = true;
+          }  
           this.chartOptions.legend.title = this.chartOptions.legend.title || {};
           this.chartOptions.legend.title.text = this.legendTitle;
         } else {
