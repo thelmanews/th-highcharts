@@ -16,7 +16,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
 @homepage http://thelmanews.github.io/th-highcharts-bar
 -->
 
-<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartTitle chartSubtitle credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legend legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor">
+<polymer-element extends="th-d3-chart" name="th-highcharts-bar"  attributes="chartTitle chartSubtitle credits creditsURL series1Name series2Name series3Name yAxisTitle xAxisTitle legend legendTitle yAxisMin yAxisMax yAxisInterval valuePrefix valueSuffix valueDecimals thousandsSep seriesColors textColor backgroundColor xTickInterval yTickInterval gridLineColor stacking">
   
   <template>
     <style>
@@ -104,6 +104,11 @@ A component that sets WSJ default settings for the Highcharts bar chart
        */
       seriesColors: [],
       /**
+       * Stacking setting for charts. Options: 'none','normal','percentage'
+       * @type {String}
+       */
+      stacking: 'none',
+      /**
        * 'chartType' is initialized as bar by default
        * @type {String}
        */
@@ -115,6 +120,10 @@ A component that sets WSJ default settings for the Highcharts bar chart
         
         //clone options to avoid shared state
         this.$.chart.chartOptions = this.$.chart.clone(this.wsjOptions);
+
+        if(this.stacking!=='none') {
+          this.$.chart.chartOptions.plotOptions.column.stacking = this.stacking;
+        }
 
         this._formatTooltipValues();
         this.$.chart._setupChart();
@@ -259,7 +268,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
             },
             bar: {
               allowPointSelect: true,
-              stacking: false, // $scope.builder.chart.stacked,
+              stacking: false,
               dataLabels: {
                 softConnector: false,
               }
@@ -350,6 +359,7 @@ A component that sets WSJ default settings for the Highcharts bar chart
        * 5) Add valuePrefix and valueSuffix to the value 
        */
       _formatTooltipValues: function(){
+
         // 1) Define reference to component
         var self = this; 
         
