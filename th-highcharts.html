@@ -373,8 +373,10 @@ A Thelma component that wraps the Highcharts library
       },
       animate: function(){
         // Set the series data and reinstantiate the chart 
-        this.chartOptions.series = this.seriesData;
-        this.chart = new Highcharts.Chart(this.chartOptions);
+        if (this.chartOptions){
+          this.chartOptions.series = this.seriesData;
+          this.chart = new Highcharts.Chart(this.chartOptions);
+        }
       },
       reset: function(){
         var numSeries = this.seriesData.length;
