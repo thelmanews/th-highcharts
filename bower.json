@@ -5,7 +5,7 @@
   "main": "th-highcharts.html",
   "dependencies": {
     "core-component-page": "Polymer/core-component-page#^0.5.5",
-    "highcharts": "~4.1.7",
+    "highcharts-release": "4.1.9",
     "polymer": "Polymer/polymer#~0.5.1",
     "th-d3-chart": "thelmanews/th-d3-chart#*",
     "th-theme": "https://github.com/thelmanews/th-theme.git"
